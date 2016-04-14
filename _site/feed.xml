@@ -1,0 +1,932 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog of Fengya</title>
+    <description>A place for study # this means to ignore newlines until &quot;baseurl:&quot;
+</description>
+    <link>https://fengyalv.github.io/Blogs/</link>
+    <atom:link href="https://fengyalv.github.io/Blogs/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 14 Apr 2016 15:52:21 +0800</pubDate>
+    <lastBuildDate>Thu, 14 Apr 2016 15:52:21 +0800</lastBuildDate>
+    <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>bash脚本内部变量</title>
+        <description>&lt;h1 id=&quot;bash&quot;&gt;bash脚本内部变量&lt;/h1&gt;
+
+&lt;h2 id=&quot;bash-1&quot;&gt;$BASH&lt;/h2&gt;
+
+&lt;p&gt;bash的程序文件的路径，如/bin/bash&lt;/p&gt;
+
+&lt;h2 id=&quot;bashenv&quot;&gt;$BASH_ENV&lt;/h2&gt;
+
+&lt;p&gt;该环境变量保存一个Bash启动文件路径，当启动一个脚本程序时会去读该环境变量指定的文件。&lt;/p&gt;
+
+&lt;p&gt;例如可以设置&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;export BASH_ENV=./testScript&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;这里testScript的内容为&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$BASH_ENV&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hello world!&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;相当于我们每次运行一个bash脚本的时候都会去引用一下testScript这个文件。&lt;/p&gt;
+
+&lt;p&gt;运行的结果为：&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hello world!&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;./testScript&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hello world!&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;./testScript&lt;/code&gt;
+相当于首先引用了一次testScript，打印出了前两行，然后执行testScript，打印出了后两行。我们可以利用这个变量引入一个文件来设置一些别名，设置一些常量之类。&lt;/p&gt;
+
+&lt;h2 id=&quot;bashsubshell&quot;&gt;$BASH_SUBSHELL&lt;/h2&gt;
+
+&lt;p&gt;一个指示子shell(subshell)等级的变量。它是Bash版本3新加入的。&lt;/p&gt;
+
+&lt;p&gt;例如运行一下脚本：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$BASH_SUBSHELL&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$BASH_SUBSHELL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;输出内容为：&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;这里()用于使用子shell（subshell）来执行命令。&lt;/p&gt;
+
+&lt;p&gt;根据这个变量可以判断子shell等级，进行例如变量作用域判断之类的操作。&lt;/p&gt;
+
+&lt;h2 id=&quot;bashversinfon&quot;&gt;$BASH_VERSINFO[n]&lt;/h2&gt;
+
+&lt;p&gt;这个数组含有6个元素，指示了安装的Bash版本的信息。它和$BASH_VERSION相似，但它们还是有一些小小的不同。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# BASH_VERSINFO[0] = 3                      # 主版本号.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# BASH_VERSINFO[1] = 00                     # 次版本号.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# BASH_VERSINFO[2] = 14                     # 补丁级.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# BASH_VERSINFO[3] = 1                      # 编译版本.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# BASH_VERSINFO[4] = release                # 发行状态.&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# BASH_VERSINFO[5] = i386-redhat-linux-gnu  # 结构体系&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;## $BASH_VERSION&lt;/p&gt;
+
+&lt;p&gt;安装在系统里的Bash版本&lt;/p&gt;
+
+&lt;p&gt;如运行&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;echo $BASH_VERSION&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;会得到&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;3.2.57(1)-release&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;dirstack&quot;&gt;$DIRSTACK&lt;/h2&gt;
+
+&lt;p&gt;在目录堆栈里面最顶端的值(它受&lt;a href=&quot;http://manual.51yip.com/shell/internal.html#PUSHDREF&quot;&gt;pushd&lt;/a&gt;和&lt;a href=&quot;http://manual.51yip.com/shell/internal.html#POPDREF&quot;&gt;popd&lt;/a&gt;的控制)&lt;/p&gt;
+
+&lt;p&gt;这个内建的变量和dirs命令相符，但dirs是给出整个目录堆栈的内容。&lt;/p&gt;
+
+&lt;h2 id=&quot;editor&quot;&gt;$EDITOR&lt;/h2&gt;
+
+&lt;p&gt;由脚本调用的默认的编辑器，一般是vi或是emacs。通常是没有设置的空变量。&lt;/p&gt;
+
+&lt;h2 id=&quot;euid&quot;&gt;$EUID&lt;/h2&gt;
+
+&lt;p&gt;有效用户id&lt;/p&gt;
+
+&lt;h2 id=&quot;funcname&quot;&gt;$FUNCNAME&lt;/h2&gt;
+
+&lt;p&gt;当前函数的名字&lt;/p&gt;
+
+&lt;p&gt;例如运行以下bash脚本：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;HelloWorld&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$FUNCNAME&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$FUNCNAME&lt;/span&gt;
+HelloWorld
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;得到的输出为：&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt; &lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;HelloWorld&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;第一行为空，第二行为函数名。&lt;/p&gt;
+
+&lt;h2 id=&quot;globignore&quot;&gt;$GLOBIGNORE&lt;/h2&gt;
+
+&lt;p&gt;由通配符(globbing)扩展的一列文件名模式&lt;/p&gt;
+
+&lt;h2 id=&quot;groups&quot;&gt;$GROUPS&lt;/h2&gt;
+
+&lt;p&gt;目前用户所属的组&lt;/p&gt;
+
+&lt;p&gt;这是一个当前用户的group id的列表，记录在/etc/passwd和/etc/group中&lt;/p&gt;
+
+&lt;h2 id=&quot;home&quot;&gt;$HOME&lt;/h2&gt;
+
+&lt;p&gt;用户的家目录&lt;/p&gt;
+
+&lt;p&gt;linux中如/home/username&lt;/p&gt;
+
+&lt;p&gt;mac中如/User/username&lt;/p&gt;
+
+&lt;p&gt;也即~表示的目录&lt;/p&gt;
+
+&lt;h2 id=&quot;hostname&quot;&gt;$HOSTNAME&lt;/h2&gt;
+
+&lt;p&gt;在系统启动时由一个初始化脚本中用hostname命令给系统指派一个名字。&lt;/p&gt;
+
+&lt;h2 id=&quot;hosttype&quot;&gt;$HOSTTYPE&lt;/h2&gt;
+
+&lt;p&gt;机器类型&lt;/p&gt;
+
+&lt;p&gt;类似$MACHTYPE一样表示系统硬件&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;echo $HOSTTYPE&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;x86_64&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;ifs&quot;&gt;$IFS&lt;/h2&gt;
+
+&lt;p&gt;内部字段分隔符，决定了bash如何分割字段，默认是空白符&lt;/p&gt;
+
+&lt;p&gt;运行脚本如下：
+```shell
+#!/bin/sh&lt;/p&gt;
+
+&lt;p&gt;function OutPutArgs(){
+        for arg
+        do
+                echo “[$arg]”
+        done
+}&lt;/p&gt;
+
+&lt;p&gt;IFS=” “
+var=” a  b c  “
+OutPutArgs $var&lt;/p&gt;
+
+&lt;p&gt;IFS=”:”
+var=”a::b:b:c”
+OutPutArgs $var
+```
+结果如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[a]
+[b]
+[c]
+[a]
+[]
+[b]
+[b]
+[c]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;ignoreeof&quot;&gt;$IGNOREEOF&lt;/h2&gt;
+
+&lt;p&gt;忽略EOF，在控制台退出之前忽略所有的文件结尾标识&lt;/p&gt;
+
+&lt;h2 id=&quot;lccollate&quot;&gt;$LC_COLLATE&lt;/h2&gt;
+
+&lt;p&gt;它常常在.bashrc或/etc/profile文件里被设置，它控制文件名扩展和模式匹配的展开顺序。如果设置不当，LC_COLLATE会在文件名通配符(filename globbing)里引起不可预料的结果。&lt;/p&gt;
+
+&lt;p&gt;到Bash2.05版本止，文件名通配符不再区分在方括号里的字符串范围中的大小写了。例如，ls [A-M]*会匹配File1.txt和file1.txt。为了保持方括号区分大小写的惯例，在/etc/profile文件和/或在~/.bashrc文件里由命令export LC_COLLATE=C把LC_COLLATE环境变量设置成C可以达到目的。&lt;/p&gt;
+
+&lt;h2 id=&quot;lineno&quot;&gt;$LINENO&lt;/h2&gt;
+
+&lt;p&gt;表示当前变量在shell脚本中的行数，可以用于调试shell脚本。&lt;/p&gt;
+
+&lt;h2 id=&quot;machtype&quot;&gt;$MACHTYPE&lt;/h2&gt;
+
+&lt;p&gt;机器类型&lt;/p&gt;
+
+&lt;p&gt;如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo $MACHTYPE
+x86_64-apple-darwin15
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;oldpwd&quot;&gt;$OLDPWD&lt;/h2&gt;
+
+&lt;p&gt;上一次的工作目录，即运行&lt;code class=&quot;highlighter-rouge&quot;&gt;cd -&lt;/code&gt;所到达的目录&lt;/p&gt;
+
+&lt;h2 id=&quot;ostype&quot;&gt;$OSTYPE&lt;/h2&gt;
+
+&lt;p&gt;操作系统类型&lt;/p&gt;
+
+&lt;p&gt;如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo $OSTYPE
+darwin15
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;path&quot;&gt;$PATH&lt;/h2&gt;
+
+&lt;p&gt;可执行程序的搜索路径&lt;/p&gt;
+
+&lt;p&gt;当给出一个命令时，shell会自动在一个哈希表里搜索由PATH变量里所列的路径寻找该命令程序。$PATH变量被保存在环境变量里，是一串由冒号(:)分割的目录名的列表。通常，系统把此变量的值在/etc/profile文件和/或在~/.bashrc文件中被定义赋值。&lt;/p&gt;
+
+&lt;p&gt;PATH=${PATH}:/opt/bin 能把/opt/bin目录加到当前现有的目录列表中去。在一个脚本中，它可以用这种方法临时地加一个目录到目录列表中去。当一个脚本退出时，此变量会恢复回原先的$PATH值(子进程不能改变父进程的环境变量)。&lt;/p&gt;
+
+&lt;p&gt;保存在$PATH目录列表中的当前”工作目录”(./)通常因为会引发安全漏洞而被忽略。因此search path中通常没有工作目录。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;echo $PATH
+/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;pipestatus&quot;&gt;$PIPESTATUS&lt;/h2&gt;
+
+&lt;p&gt;此数组变量保存了最后执行的前台管道的退出状态。它不一定和最后执行的命令的退出状态一样。&lt;/p&gt;
+
+&lt;p&gt;$PIPESTATUS数组的成员保存了每一个在管道里执行的命令各自的退出状态。$PIPESTATUS[0]保存了管道里第一个命令的退出状态，$PIPESTATUS[1]保存了管道里第二个命令的退出状态，以此类推。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ls | aaa | wc
+bash: aaa: command not found
+       0       0       0
+$ echo ${PIPESTATUS[@]}
+141 127 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;ppid&quot;&gt;$PPID&lt;/h2&gt;
+
+&lt;p&gt;一个进程的$PPID变量保存它的父进程的进程ID(pid)。&lt;/p&gt;
+
+&lt;h2 id=&quot;promptcommand&quot;&gt;$PROMPT_COMMAND&lt;/h2&gt;
+
+&lt;p&gt;这个变量在主提示符前($PS1显示之前)执行它的值里保存的命令。&lt;/p&gt;
+
+&lt;h2 id=&quot;ps1&quot;&gt;$PS1&lt;/h2&gt;
+
+&lt;p&gt;这是主提示符（第一提示符），它能在命令行上看见。即每次输入命令时前面的那些内容。&lt;/p&gt;
+
+&lt;h2 id=&quot;ps2&quot;&gt;$PS2&lt;/h2&gt;
+
+&lt;p&gt;副提示符（第二提示符），它在期望有附加的输入时能看见。它显示像”&amp;gt;”的提示。即如果输一条命令如&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;for i in a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;然后回车。通常我们看见的是&amp;gt;符号。即PS2。&lt;/p&gt;
+
+&lt;h2 id=&quot;ps3&quot;&gt;$PS3&lt;/h2&gt;
+
+&lt;p&gt;第三提示符。它在一个select循环里显示&lt;/p&gt;
+
+&lt;p&gt;例如运行以下脚本：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;PS3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;Choose one:&#39;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;select &lt;/span&gt;vegetable &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;beans&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;carrots&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do
+        &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Your choose is &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vegetable&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;break
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;done
+
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;运行结果类似：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) beans
+2) carrots
+Choose one:1
+Your choose is beans
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;ps4&quot;&gt;$PS4&lt;/h2&gt;
+
+&lt;p&gt;第四提示符，它在用-x选项调用一个脚本时的输出的每一行开头显示。它通常显示像”+”的提示。&lt;/p&gt;
+
+&lt;h2 id=&quot;pwd&quot;&gt;$PWD&lt;/h2&gt;
+
+&lt;p&gt;工作目录。类似于内建命令pwd&lt;/p&gt;
+
+&lt;h2 id=&quot;reply&quot;&gt;$REPLY&lt;/h2&gt;
+
+&lt;p&gt;没有变量提供给read命令时的默认变量．这也适用于select命令的目录，但只是提供被选择的变量项目编号而不是变量本身的值&lt;/p&gt;
+
+&lt;p&gt;例如执行以下脚本：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -n &lt;span class=&quot;s2&quot;&gt;&quot;Input a:&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;read
+
+echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;a is: &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$REPLY&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;read&lt;/span&gt; -p &lt;span class=&quot;s2&quot;&gt;&quot;b is :&quot;&lt;/span&gt; b
+
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;b is: &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$b&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;REPLY is :&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$REPLY&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;得到的结果如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Input a:a
+a is: a
+b is :b
+b is: b
+REPLY is :a
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;seconds&quot;&gt;$SECONDS&lt;/h2&gt;
+
+&lt;p&gt;脚本已运行秒数&lt;/p&gt;
+
+&lt;h2 id=&quot;shelllopts&quot;&gt;$SHELLLOPTS&lt;/h2&gt;
+
+&lt;p&gt;已经激活的shell选项列表，它是一个只读变量&lt;/p&gt;
+
+&lt;h2 id=&quot;shlvl&quot;&gt;$SHLVL&lt;/h2&gt;
+
+&lt;p&gt;SHELL的嵌套级别．指示了Bash被嵌套了多深．在命令行里，$SHLVL是1，因此在一个脚本里，它是2.&lt;/p&gt;
+
+&lt;h2 id=&quot;tmout&quot;&gt;$TMOUT&lt;/h2&gt;
+
+&lt;p&gt;如果&lt;em&gt;$TMOUT&lt;/em&gt;环境变量被设为非零值时间值&lt;em&gt;time&lt;/em&gt;，那么经过&lt;em&gt;time&lt;/em&gt;这么长的时间后，shell提示符会超时．这将使此shell退出登录．&lt;/p&gt;
+
+&lt;p&gt;在Bash版本2.05b以上，可以在脚本中把&lt;em&gt;$TMOUT&lt;/em&gt;和&lt;a href=&quot;http://manual.51yip.com/shell/internal.html#READREF&quot;&gt;read&lt;/a&gt;命令结合使用&lt;/p&gt;
+
+&lt;p&gt;有其他更复杂的在脚本中实现定时输入的方法．另一个方法是设置一个定时循环，超时时给脚本发送一个信号．这个办法要求有一个处理例程来捕捉(trap)由定时循环产生的信号&lt;/p&gt;
+
+&lt;h2 id=&quot;uid&quot;&gt;$UID&lt;/h2&gt;
+
+&lt;p&gt;用户ID号&lt;/p&gt;
+
+&lt;p&gt;这是当前用户的用户标识号，它在/etc/passwd文件中记录。&lt;/p&gt;
+
+&lt;p&gt;这是当前用户的真实ID，即使只是临时通过su命令转换成另外一个用户也会显示成转换成的ID号。$UID是个只读变量，不能在命令行或是脚本中更改它，并且它和内建命令id是有些相似的。&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;位置参数&lt;/h2&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;$0, $1, $2,等等&lt;/h3&gt;
+
+&lt;p&gt;位置参数由命令行传给脚本或传给一个函数，或设置(set)给一个变量&lt;/p&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;$&lt;/h3&gt;
+
+&lt;p&gt;命令行参数[]或者是位置参数的数量&lt;/p&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;$*&lt;/h3&gt;
+
+&lt;p&gt;所有的位置参数都被当成单个单元。&lt;/p&gt;
+
+&lt;p&gt;”$*“必须被引号引起来&lt;/p&gt;
+
+&lt;h3 id=&quot;section-4&quot;&gt;$@&lt;/h3&gt;
+
+&lt;p&gt;和$*相同，但每个参数都是一个引起的字符串。那是说，参数都是没有被解析或扩展，是完整无缺地被传递的。这是说在参数列表中的每一个参数都被看作是一个单独的单元。&lt;/p&gt;
+
+&lt;p&gt;”$@”应该被引号引起来。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;其他特殊参数&lt;/h2&gt;
+
+&lt;h3 id=&quot;section-6&quot;&gt;$!&lt;/h3&gt;
+
+&lt;p&gt;在后台运行的最后一个作业的PID(进程ID)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ echo aa &amp;amp; echo bb &amp;amp; echo $!
+[1] 12875
+[2] 12876
+12876
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;section-7&quot;&gt;$_&lt;/h3&gt;
+
+&lt;p&gt;保存前一个命令最后一个参数的变量值&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ echo a b c
+a b c
+echo $_
+c
+$ echo
+$ echo $_
+echo
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;section-8&quot;&gt;$?&lt;/h3&gt;
+
+&lt;p&gt;一个命令，函数或脚本自身的退出状态码，可以用于在脚本里判断运行状况。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-9&quot;&gt;$&lt;/h3&gt;
+
+&lt;p&gt;脚本本身的进程PID。$$变量常被用于脚本中生成一个”唯一的”临时文件名. 这通常比调用mktemp还要简单。&lt;/p&gt;
+
+&lt;h2 id=&quot;locale&quot;&gt;Locale&lt;/h2&gt;
+
+&lt;p&gt;Locale是linux系统中多语言环境的设置接口，Locale根据计算机用户所使用的语言，所在国家或者地区，以及当地的文化传统所定义的一个软件运行时的语言环境。&lt;/p&gt;
+
+&lt;p&gt;Locale是linux系统中多语言环境的设置接口，Locale根据计算机用户所使用的语言，所在国家或者地区，以及当地的文化传统所定义的一个软件运行时的语言环境。
+locale把按照所涉及到的文化传统的各个方面分成12个大类，这12个大类分别是：&lt;/p&gt;
+
+&lt;p&gt;1、语言符号及其分类(LC_CTYPE)
+2、数字(LC_NUMERIC)
+3、比较和排序习惯(LC_COLLATE)
+4、时间显示格式(LC_TIME)
+5、货币单位(LC_MONETARY)
+6、信息主要是提示信息,错误信息,状态信息,标题,标签,按钮和菜单等(LC_MESSAGES)
+7、姓名书写方式(LC_NAME)
+8、地址书写方式(LC_ADDRESS)
+9、电话号码书写方式(LC_TELEPHONE)
+10、度量衡表达方式 (LC_MEASUREMENT)
+11、默认纸张尺寸大小(LC_PAPER)
+12、对locale自身包含信息的概述(LC_IDENTIFICATION)。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ locale
+LANG=&quot;zh_CN.UTF-8&quot;
+LC_COLLATE=&quot;zh_CN.UTF-8&quot;
+LC_CTYPE=&quot;zh_CN.UTF-8&quot;
+LC_MESSAGES=&quot;zh_CN.UTF-8&quot;
+LC_MONETARY=&quot;zh_CN.UTF-8&quot;
+LC_NUMERIC=&quot;zh_CN.UTF-8&quot;
+LC_TIME=&quot;zh_CN.UTF-8&quot;
+LC_ALL=
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;设定locale就是设定12大类的locale分类属性，即12个LC。除了这12个变量可以设定以外，为了简便起见，还有两个变量：LC_ALL和LANG。它们之间有一个优先级的关系：LC_ALL &amp;gt; LC &amp;gt;LANG。可以这么说，LC_ALL是最上级设定或者强制设定，而LANG是默认设定值。&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 14 Apr 2016 00:00:00 +0800</pubDate>
+        <link>https://fengyalv.github.io/Blogs/shell/bash%E8%84%9A%E6%9C%AC%E5%86%85%E9%83%A8%E5%8F%98%E9%87%8F.html</link>
+        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/shell/bash%E8%84%9A%E6%9C%AC%E5%86%85%E9%83%A8%E5%8F%98%E9%87%8F.html</guid>
+        
+        <category>shell</category>
+        
+        <category>linux</category>
+        
+        <category>mac</category>
+        
+        
+        <category>shell</category>
+        
+      </item>
+    
+      <item>
+        <title>Welcome to Nice Blog</title>
+        <description>&lt;h2 id=&quot;welcome&quot;&gt;Welcome&lt;/h2&gt;
+
+&lt;p&gt;I think many blog themes are over designed, so I created this one.&lt;/p&gt;
+
+&lt;p&gt;Just for using, not showing off.&lt;/p&gt;
+
+&lt;h2 id=&quot;nice-blog&quot;&gt;Nice Blog&lt;/h2&gt;
+
+&lt;p&gt;A Simple Jekyll Blog Theme.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://benjaminblog.ml/Nice_Blog&quot;&gt;Demo&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://itisbenjamin.github.io/Nice_Blog/img/blog/index.png&quot; alt=&quot;index-page&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Introduce yourself in &lt;code class=&quot;highlighter-rouge&quot;&gt;About&lt;/code&gt; page  :
+&lt;img src=&quot;https://itisbenjamin.github.io/Nice_Blog/img/blog/about.png&quot; alt=&quot;about-page&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And you can turn on or off your skills tree in &lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt; :&lt;br /&gt;
+&lt;img src=&quot;https://itisbenjamin.github.io/Nice_Blog/img/blog/skillstree.png&quot; alt=&quot;skills-tree&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Posts will be listed by years in &lt;code class=&quot;highlighter-rouge&quot;&gt;Archive&lt;/code&gt; page:&lt;br /&gt;
+&lt;img src=&quot;https://itisbenjamin.github.io/Nice_Blog/img/blog/archive.png&quot; alt=&quot;archive-page&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Post will be listed by categories in &lt;code class=&quot;highlighter-rouge&quot;&gt;Category&lt;/code&gt; page:&lt;br /&gt;
+&lt;img src=&quot;https://itisbenjamin.github.io/Nice_Blog/img/blog/category.png&quot; alt=&quot;category-page&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Post will be listed by tags in &lt;code class=&quot;highlighter-rouge&quot;&gt;Tags&lt;/code&gt; page:&lt;br /&gt;
+&lt;img src=&quot;https://itisbenjamin.github.io/Nice_Blog/img/blog/tags.png&quot; alt=&quot;tags-page&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;You can put your &lt;code class=&quot;highlighter-rouge&quot;&gt;PGP&lt;/code&gt; publickey in &lt;code class=&quot;highlighter-rouge&quot;&gt;Contact&lt;/code&gt; page:&lt;br /&gt;
+&lt;img src=&quot;https://itisbenjamin.github.io/Nice_Blog/img/blog/contact.png&quot; alt=&quot;contact-page&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now you have a &lt;code class=&quot;highlighter-rouge&quot;&gt;404&lt;/code&gt; page and it will jump back to &lt;code class=&quot;highlighter-rouge&quot;&gt;index&lt;/code&gt; page itself:&lt;br /&gt;
+&lt;img src=&quot;https://itisbenjamin.github.io/Nice_Blog/img/blog/404.png&quot; alt=&quot;404-page&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you add &lt;code class=&quot;highlighter-rouge&quot;&gt;finshed: true&lt;/code&gt; in your post header, then an &lt;code class=&quot;highlighter-rouge&quot;&gt;EOF&lt;/code&gt; container will show under your post like this:&lt;/p&gt;
+&lt;div class=&quot;eof&quot;&gt;&lt;/div&gt;
+
+&lt;p&gt;Or it will show &lt;code class=&quot;highlighter-rouge&quot;&gt;TBC&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;tbc&quot;&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;how-to-use&quot;&gt;How to use&lt;/h2&gt;
+
+&lt;p&gt;Star it, fork it, and download it.&lt;/p&gt;
+
+&lt;p&gt;Change the settings in &lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt; file and then you can use this theme.&lt;/p&gt;
+
+&lt;p&gt;Easy, right?&lt;/p&gt;
+
+&lt;p&gt;If you wanna do more, then change whatever you want. But first, you should know what you are doing.&lt;/p&gt;
+
+&lt;p&gt;If you make all codes a mess, do not worry, just come back and download again.&lt;/p&gt;
+
+&lt;p&gt;Have fun.&lt;/p&gt;
+
+&lt;h2 id=&quot;author&quot;&gt;Author&lt;/h2&gt;
+
+&lt;p&gt;A normal person just wanna see this world.&lt;/p&gt;
+
+&lt;p&gt;&lt;i class=&quot;fa fa-twitter&quot;&gt;&lt;/i&gt;  &lt;a href=&quot;https://twitter.com/itisbenjamin1&quot;&gt;Twitter&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;license&quot;&gt;License&lt;/h2&gt;
+
+&lt;p&gt;Use MIT License.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 30 Mar 2016 00:00:00 +0800</pubDate>
+        <link>https://fengyalv.github.io/Blogs/jekyll/welcome.html</link>
+        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/jekyll/welcome.html</guid>
+        
+        <category>jekyll</category>
+        
+        <category>github</category>
+        
+        <category>blog</category>
+        
+        
+        <category>Jekyll</category>
+        
+      </item>
+    
+      <item>
+        <title>Markdown Gramma</title>
+        <description>&lt;h2 id=&quot;heading&quot;&gt;Heading&lt;/h2&gt;
+
+&lt;p&gt;Heading is really simple in Markdown, you can use &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;# H1. Heading&lt;/code&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;h1-heading&quot;&gt;H1. Heading&lt;/h1&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;## H2. Heading&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;h2-heading&quot;&gt;H2. Heading&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;### H3. Heading&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;h3-heading&quot;&gt;H3. Heading&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#### H4. Heading&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;h4-heading&quot;&gt;H4. Heading&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;##### H5. Heading&lt;/code&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;h5-heading&quot;&gt;H5. Heading&lt;/h5&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;###### H6. Heading&lt;/code&gt;&lt;/p&gt;
+
+&lt;h6 id=&quot;h6-heading&quot;&gt;H6. Heading&lt;/h6&gt;
+
+&lt;p&gt;And like this:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-md&quot; data-lang=&quot;md&quot;&gt;Heading
+======&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1 id=&quot;heading-1&quot;&gt;Heading&lt;/h1&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-md&quot; data-lang=&quot;md&quot;&gt;Heading
+&lt;span class=&quot;p&quot;&gt;-------&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;See? Really easy.&lt;/p&gt;
+
+&lt;h2 id=&quot;font&quot;&gt;Font&lt;/h2&gt;
+
+&lt;p&gt;There are three kinds of font in Markdown.&lt;/p&gt;
+
+&lt;h3 id=&quot;italic&quot;&gt;Italic：&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*Italic*&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Italic&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_Italic_&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Italic&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;bold&quot;&gt;Bold：&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;**Bold**&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__Bold__&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;italic--bold&quot;&gt;Italic &amp;amp; Bold：&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;***Italic &amp;amp; Bold***&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Italic &amp;amp; Bold&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;___Italic &amp;amp; Bold___&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Italic &amp;amp; Bold&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;You can also do this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;**Markdown is _fun_**&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Markdown is &lt;em&gt;fun&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;list&quot;&gt;List&lt;/h2&gt;
+
+&lt;h3 id=&quot;order-list&quot;&gt;Order list:&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;1. 2. 3. &lt;/code&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;First&lt;/li&gt;
+  &lt;li&gt;Second&lt;/li&gt;
+  &lt;li&gt;Third&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;unorder-list&quot;&gt;Unorder list:&lt;/h3&gt;
+
+&lt;p&gt;There are three ways to make a unorder list:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;* AAA&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;AAA&lt;/li&gt;
+  &lt;li&gt;BBB&lt;/li&gt;
+  &lt;li&gt;CCC&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;- AAA&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;AAA&lt;/li&gt;
+  &lt;li&gt;BBB&lt;/li&gt;
+  &lt;li&gt;CCC&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;+ AAA&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;AAA&lt;/li&gt;
+  &lt;li&gt;BBB&lt;/li&gt;
+  &lt;li&gt;CCC&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;block-quote&quot;&gt;Block quote&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; War is Peace&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; Freedom is Slavery&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; Ignorance is Strength&lt;/code&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;War is Peace&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Freedom is Slavery&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Ignorance is Strength&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;引用區也可內嵌Markdown其他語法。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; * War is Peace&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; * Freedom is Slavery&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; * Ignorance is Stength&lt;/code&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;War is Peace&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Freedom is Slavery&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Ignorance is Stength&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;link&quot;&gt;Link&lt;/h2&gt;
+
+&lt;h3 id=&quot;simple-link&quot;&gt;Simple link&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;http://itisbenjamin.github.io&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://itisbenjamin.github.io&quot;&gt;http://itisbenjamin.github.io&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;You can also do this when you insert an email address.&lt;/p&gt;
+
+&lt;h3 id=&quot;link-1&quot;&gt;Link&lt;/h3&gt;
+
+&lt;p&gt;You can add your link just behind your words:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[Ben](www.itisbenjamin.github.io)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;www.itisbenjamin.github.io&quot;&gt;Ben&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;And you can also do it like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[Something Important][1]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Then put this line at anywhere you want in your post:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[1]: some comments.&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;link-description&quot;&gt;Link description&lt;/h3&gt;
+
+&lt;p&gt;You can add the link description behind the link address:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[Ben](www.itisbenjamin.github.io &quot;Ben&quot;)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;www.itisbenjamin.github.io&quot; title=&quot;Ben&quot;&gt;Ben&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;image&quot;&gt;Image&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;![Codes](/img/code.png)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/code.png&quot; alt=&quot;Codes&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Images’ descriptions are the same as how you do it in links:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;![Codes](/img/code.png &quot;Codes&quot;)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/code.png&quot; alt=&quot;Codes&quot; title=&quot;Codes&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;code&quot;&gt;Code&lt;/h2&gt;
+
+&lt;p&gt;You can use &lt;code&gt;``&lt;/code&gt; to show your codes:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;`.default`&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.default&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;If you wanna show a piece of codes, use 4 spaces or 1 tab.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;post-header-container&amp;gt;
+  &amp;lt;div class=&quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;scrim&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;header&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;post-header&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;title&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Markdown Gramma&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;info&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;by &lt;span class=&quot;nt&quot;&gt;&amp;lt;strong&amp;gt;&lt;/span&gt;Benjamin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/strong&amp;gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/header&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;others&quot;&gt;Others&lt;/h2&gt;
+
+&lt;h3 id=&quot;breaker&quot;&gt;Breaker&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;---&lt;/code&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;***&lt;/code&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;- - - -&lt;/code&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;They all show a breaker.&lt;/p&gt;
+
+&lt;h2 id=&quot;footnote&quot;&gt;Footnote&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Something needs a footnote[^1].&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[^1]: This is a footnote.&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Something needs a footnote&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+
+&lt;p&gt;Then this footnote will show at the end of this post.&lt;/p&gt;
+
+&lt;h2 id=&quot;delete&quot;&gt;Delete&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;~~There is no tree waiting for me.~~&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;del&gt;There is no tree waiting for me.&lt;/del&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;table&quot;&gt;Table&lt;/h2&gt;
+
+&lt;h3 id=&quot;a-simple-way&quot;&gt;A simple way&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;A     | B     | C     | D &lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;----- | ----- | ----- | -----&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;a     | b     | c     | d&lt;/code&gt;&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;A&lt;/th&gt;
+      &lt;th&gt;B&lt;/th&gt;
+      &lt;th&gt;C&lt;/th&gt;
+      &lt;th&gt;D&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;a&lt;/td&gt;
+      &lt;td&gt;b&lt;/td&gt;
+      &lt;td&gt;c&lt;/td&gt;
+      &lt;td&gt;d&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;make-words-at-left-center-or-right&quot;&gt;Make words at left, center or right&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;left      | center       | center       | right&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;:-------- | :----------: | :----------: | -----:&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;a         | b            | c            | d&lt;/code&gt;&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;left&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;center&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;center&lt;/th&gt;
+      &lt;th style=&quot;text-align: right&quot;&gt;right&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;a&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;b&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;c&lt;/td&gt;
+      &lt;td style=&quot;text-align: right&quot;&gt;d&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;This is a footnote. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Tue, 29 Mar 2016 00:00:00 +0800</pubDate>
+        <link>https://fengyalv.github.io/Blogs/coding/markdown.html</link>
+        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/coding/markdown.html</guid>
+        
+        <category>code</category>
+        
+        <category>markdown</category>
+        
+        <category>github</category>
+        
+        
+        <category>coding</category>
+        
+      </item>
+    
+  </channel>
+</rss>

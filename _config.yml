@@ -1,1 +1,19 @@
-encoding: utf-8
+# Site settings
+title: Blog of Fengya
+name: Fengya # your name
+email: 1335133044@qq.com # your email address
+description: >
+    A place for study # this means to ignore newlines until "baseurl:"
+baseurl: "/Blogs" # the subpath of your site, e.g. /blog
+url: "https://fengyalv.github.io" # the base hostname & protocol for your site
+twitter_username: 1335133044 # your Twitter username
+github_username: Fengyalv # your Github username
+disqus_username: Fengya # your disqus username
+
+google-analytics:  # add it if you have one
+
+skillstree:  # turn on or off the skills tree in about page
+
+# Build settings
+permalink: none
+markdown: kramdown
