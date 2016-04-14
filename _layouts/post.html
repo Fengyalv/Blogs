@@ -17,7 +17,7 @@ layout: default
         {% if page.tags %}
         <div class="post-tags">
         {% for tag in page.tags %}
-		<a class="post-tags-item" href="/tags/">{{ tag }}</a>
+		<a class="post-tags-item" href="{{ "/tags/" | prepend: site.baseurl }}">{{ tag }}</a>
         {% endfor %}
 	{% endif %}</div>
     </center>

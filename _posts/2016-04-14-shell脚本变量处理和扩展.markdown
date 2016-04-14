@@ -1,0 +1,430 @@
+---
+layout: post
+title: "shell脚本变量处理和扩展"
+subtitle: ""
+date: 2016-04-14
+author: Fengya
+category: shell
+tags: shell linux mac 变量
+finished: true
+---
+
+# shell脚本变量处理和扩展
+
+## 变量的类型
+
+### 局部变量
+
+局部变量只在代码块或一个函数里有效
+
+如果变量用local来声明，那么它只能在该变量声明的代码块(block of code)中可见。这个代码块就是局部"范围"。 在一个函数内，局部变量意味着只能在函数代码块内它才有意义。
+
+例如如下代码：
+
+```shell
+#!/bin/bash
+
+para1='a'
+
+function func(){
+	local para2='b'
+	echo "para1:${para1}"
+	echo "para2:${para2}"
+}
+
+func
+echo "para1:${para1}"
+echo "para2:${para2}"
+```
+
+输出为：
+
+```
+para1:a
+para2:b
+para1:a
+para2:
+```
+
+### 变量的声明
+
+declare或typeset内建命令(它们是完全相同的)可以用来限定变量的属性.这是在某些编程语言中使用的定义类型不严格的方式。命令declare是bash版本2之后才有的。命令typeset也可以在ksh脚本中运行。
+
+#### -r只读
+
+`declare -r var`等同于`readonly var`
+
+#### -i整数
+
+将变量认为是整数
+
+例如：
+
+```shell
+n=6/3
+echo $n
+
+declare -i n
+n=6/3
+echo $n
+```
+
+输出为：
+
+```
+6/3
+2
+```
+
+#### -a数组
+
+#### -f函数
+
+在脚本中没有带任何参数的declare -f 会列出所有在此脚本前面已定义的函数出来。而declare -f function_name则只会列出指定的函数。
+
+例如：
+
+```shell
+function abcd(){
+  echo abcd
+}
+function cdef(){
+  echo cdef
+}
+declare -f
+echo
+declare -f abcd
+```
+
+输出为：
+
+```
+abcd ()
+{
+    echo aaa
+}
+cdef ()
+{
+    echo cdef
+}
+
+abcd ()
+{
+    echo aaa
+}
+```
+
+#### -F函数
+
+显示所有的自定义函数的名称
+
+例如上述例子：
+
+```shell
+declare -F
+```
+
+输出为：
+
+```
+declare -f abcd
+declare -f cdef
+```
+
+
+
+#### -x export
+
+这样将声明一个变量作为脚本的环境变量而被导出。
+
+类似的用法有：
+
+```shell
+declare -x var
+typeset -x var
+export var
+```
+
+
+
+#### -p 变量
+
+类似-f选项。不传参数会显示所有的变量的值。传参数只会显示对应的变量的值。
+
+## 常用变量使用方法
+
+### ${parameter}
+
+运行如下脚本：
+
+```shell
+#!/bin/bash
+
+para='a'
+echo ${para}
+```
+
+运行结果为：
+
+`a`
+
+其中para是脚本的变量。也可以简写为`$para`的形式，但是在某种情况下可能会引起歧义。
+
+在一个双引号（" "）里的变量引用不会禁止变量替换。所以双引号被称为部分引用，有时也称为"弱引用"。而在一个单引号里(' ')的变量替换是被禁止的，变量名只被解释为普通的字面意思。所以单引号被称为"全局引用"，有时也被称为强引用。
+
+未初始化的变量又一个空的值（null）但是在算术运算中会按照0来计算。
+
+Bash不以"类型"来区分变量。本质上来说，Bash变量是字符串，但是根据环境的不同，Bash允许变量有整数计算和比较。其中的决定因素是变量的值是不是只含有数字。
+
+### ${parameter-default}, ${parameter:-default}
+
+如果变量没有被设置，使用默认值。它们之间的差别是：当一个参数已被声明，但是值是NULL的时候两者不同。
+
+例如：
+
+```shell
+#!/bin/bash
+
+echo a:${a-'a'}
+echo a:${a}
+a=
+echo a:${a-'a'}
+echo a:${a}
+
+echo b:${b:-'b'}
+echo b:${b}
+b=
+echo b:${b:-'b'}
+echo b:${b}
+```
+
+```
+a:a
+a:
+a:
+a:
+b:b
+b:
+b:b
+b:
+```
+
+###  \$\{parameter=default}, \$\{parameter:=default}
+
+如果变量parameter没有设置，把它设置成默认值.
+
+两种形式几乎相同，只是和上面的一样，只有当$parameter变量被声明且被设置成null值时不同
+
+### ${parameter+alt_value}, ${parameter:+alt_value}
+
+如果变量parameter设置，使用alt_value作为新值，否则使用空字符串。
+
+除了引起的当变量被声明且值是空值时有些不同外，两种形式几乎相等。
+
+例如：
+
+```shell
+#!/bin/bash
+
+echo a:${a+'a'}
+a=
+echo a:${a+'a'}
+
+echo b:${b:+'b'}
+b=
+echo b:${b:+'b'}
+
+echo a:${a+'a'}
+a=qqqqqqq
+echo a:${a+'a'}
+
+echo b:${b:+'b'}
+b=qqqqqqq
+echo b:${b:+'b'}
+```
+
+运行结果为：
+
+```
+a:
+a:a
+b:
+b:
+a:a
+a:a
+b:
+b:b
+```
+
+### ${parameter?err_msg}, ${parameter:?err_msg}
+
+如果变量parameter已经设置，则使用该值，否则打印err_msg错误信息。
+
+通常可以用于参数检查。
+
+```shell
+: ${qwe?"qwe doesnot exit"}
+```
+
+结果为：
+
+```
+bash: qwe: qwe doesnot exit
+```
+
+## 变量的扩展
+
+### ${\#var}
+
+字符串的长度
+
+例如：
+
+```shell
+a='aaa'
+echo ${#a}
+```
+
+结果为：
+
+```
+3
+```
+
+### ${var#Pattern}, ${var##Pattern}
+
+删除从$var前端开始的最短或最长匹配$Pattern的字符串。
+
+例如：
+
+```shell
+a='abcd1234abcd1234abcd1234'
+echo ${a#*abcd}
+echo ${a##*abcd}
+```
+
+输出为：
+
+```
+1234abcd1234abcd1234
+1234
+```
+
+### ${var%Pattern}, ${var%%Pattern}
+
+删除从$var后端开始的最短或最长匹配$Pattern的字符串。
+
+例如：
+
+```shell
+a='abcd1234abcd1234abcd1234'
+echo output:${a%abcd*}
+echo output:${a%%abcd*}
+```
+
+输出为：
+
+```
+output:abcd1234abcd1234
+output:
+```
+
+### ${var:pos}
+
+变量var被展开成从位移pos个字符往后的值
+
+例如：
+
+```shell
+a='abcd'
+echo ${a:2}
+```
+
+输出为：
+
+```
+cd
+```
+
+### ${var:pos:len}
+
+从变量var中展开成从位移pos的字符往后最长为len的字符串。与上一个命令用法相仿。
+
+### ${var/Patten/Replacement}
+
+在变量var第一个匹配Pattern的字符串用Replacement代替
+
+### ${var//Patten/Replacement}
+
+所有在变量var中被Pattern匹配到的都由Replacement代替。
+
+例如：
+
+```shell
+a='abcd1234abcd1234abcd'
+echo ${a/abcd/1234}
+echo ${a//abcd/1234}
+```
+
+输出为：
+
+```
+12341234abcd1234abcd
+12341234123412341234
+```
+
+### ${var/#Pattern/Replacement}
+
+如果变量*var*的*前缀*匹配模式*Pattern*,则用*Replacement*代替匹配模式的字符串.
+
+### ${var/%Pattern/Replacement}
+
+如果变量var的后缀匹配模式Pattern,则用Replacement代替匹配模式的字符串.
+
+例如：
+
+```shell
+a='abcd1234abcd1234abcd'
+echo ${a/#ab/1234}
+echo ${a/%cd/1234}
+echo ${a/#bc/1234}
+echo ${a/%bc/1234}
+```
+
+输出为：
+
+```
+1234cd1234abcd1234abcd
+abcd1234abcd1234ab1234
+abcd1234abcd1234abcd
+abcd1234abcd1234abcd
+```
+
+### ${!varprefix*}, ${!varprefix@}
+
+匹配所有前面声明过的变量，并且变量名以varprefix开头.
+
+例如：
+
+```shell
+abc1=1
+abc2=a
+abc3=
+
+echo ${!abc*}
+echo ${!abc@}
+```
+
+输出为：
+
+```
+abc1 abc2 abc3
+abc1 abc2 abc3
+```
+
+
+
+
+
+
+

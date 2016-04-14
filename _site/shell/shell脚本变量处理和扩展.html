@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+
+  <link rel="stylesheet" href="/Blogs/css/main.css">
+  <link rel="canonical" href="https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E5%8F%98%E9%87%8F%E5%A4%84%E7%90%86%E5%92%8C%E6%89%A9%E5%B1%95.html">
+  <link rel="alternate" type="application/rss+xml" title="Blog of Fengya" href="https://fengyalv.github.io/Blogs/feed.xml">
+
+<!-- Google font -->
+
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto Sans">
+
+<!-- font awesome -->
+
+<link rel="stylesheet" href="/Blogs/css/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+
+  
+
+  
+
+  </head>
+
+  <body>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>shell脚本变量处理和扩展</title>
+  <meta name="description" content="shell脚本变量处理和扩展">
+</head>
+
+
+  <div class="wrapper">
+          <header class="post-header">
+
+    <center><div class="post-title" itemprop="name headline">shell脚本变量处理和扩展</div>
+
+		<div class="post-meta"><i class="fa fa-calendar-o"></i> <time datetime="14 Apr 2016" itemprop="datePublished">Apr 14 2016</time>
+
+		&nbsp;&nbsp;•&nbsp;&nbsp;<i class="fa fa-user-secret"></i> <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Fengya</span>
+        
+		<br>
+		<i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-pulse"></i></span>˚C</span>
+	</div>
+
+        
+        <div class="post-tags">
+        
+		<a class="post-tags-item" href="/Blogs/tags/">shell</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">linux</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">mac</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">变量</a>
+        
+	</div>
+    </center>
+    
+</header>
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="post-content">
+    <center>
+	
+	<p></p>
+	
+    </center>
+	<h2>Directory</h2>
+</div>
+
+<div id="category"></div>
+
+<div class="post-content" itemprop="articleBody">
+    <h1 id="shell">shell脚本变量处理和扩展</h1>
+
+<h2 id="section">变量的类型</h2>
+
+<h3 id="section-1">局部变量</h3>
+
+<p>局部变量只在代码块或一个函数里有效</p>
+
+<p>如果变量用local来声明，那么它只能在该变量声明的代码块(block of code)中可见。这个代码块就是局部”范围”。 在一个函数内，局部变量意味着只能在函数代码块内它才有意义。</p>
+
+<p>例如如下代码：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="nv">para1</span><span class="o">=</span><span class="s1">'a'</span>
+
+<span class="k">function </span>func<span class="o">(){</span>
+	<span class="nb">local </span><span class="nv">para2</span><span class="o">=</span><span class="s1">'b'</span>
+	<span class="nb">echo</span> <span class="s2">"para1:</span><span class="k">${</span><span class="nv">para1</span><span class="k">}</span><span class="s2">"</span>
+	<span class="nb">echo</span> <span class="s2">"para2:</span><span class="k">${</span><span class="nv">para2</span><span class="k">}</span><span class="s2">"</span>
+<span class="o">}</span>
+
+func
+<span class="nb">echo</span> <span class="s2">"para1:</span><span class="k">${</span><span class="nv">para1</span><span class="k">}</span><span class="s2">"</span>
+<span class="nb">echo</span> <span class="s2">"para2:</span><span class="k">${</span><span class="nv">para2</span><span class="k">}</span><span class="s2">"</span>
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>para1:a
+para2:b
+para1:a
+para2:
+</code></pre>
+</div>
+
+<h3 id="section-2">变量的声明</h3>
+
+<p>declare或typeset内建命令(它们是完全相同的)可以用来限定变量的属性.这是在某些编程语言中使用的定义类型不严格的方式。命令declare是bash版本2之后才有的。命令typeset也可以在ksh脚本中运行。</p>
+
+<h4 id="r">-r只读</h4>
+
+<p><code class="highlighter-rouge">declare -r var</code>等同于<code class="highlighter-rouge">readonly var</code></p>
+
+<h4 id="i">-i整数</h4>
+
+<p>将变量认为是整数</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">n</span><span class="o">=</span>6/3
+<span class="nb">echo</span> <span class="nv">$n</span>
+
+<span class="nb">declare</span> -i n
+<span class="nv">n</span><span class="o">=</span>6/3
+<span class="nb">echo</span> <span class="nv">$n</span>
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>6/3
+2
+</code></pre>
+</div>
+
+<h4 id="a">-a数组</h4>
+
+<h4 id="f">-f函数</h4>
+
+<p>在脚本中没有带任何参数的declare -f 会列出所有在此脚本前面已定义的函数出来。而declare -f function_name则只会列出指定的函数。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">function </span>abcd<span class="o">(){</span>
+  <span class="nb">echo </span>abcd
+<span class="o">}</span>
+<span class="k">function </span>cdef<span class="o">(){</span>
+  <span class="nb">echo </span>cdef
+<span class="o">}</span>
+<span class="nb">declare</span> -f
+<span class="nb">echo
+declare</span> -f abcd
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>abcd ()
+{
+    echo aaa
+}
+cdef ()
+{
+    echo cdef
+}
+
+abcd ()
+{
+    echo aaa
+}
+</code></pre>
+</div>
+
+<h4 id="f-1">-F函数</h4>
+
+<p>显示所有的自定义函数的名称</p>
+
+<p>例如上述例子：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">declare</span> -F
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>declare -f abcd
+declare -f cdef
+</code></pre>
+</div>
+
+<h4 id="x-export">-x export</h4>
+
+<p>这样将声明一个变量作为脚本的环境变量而被导出。</p>
+
+<p>类似的用法有：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">declare</span> -x var
+<span class="nb">typeset</span> -x var
+<span class="nb">export </span>var
+</code></pre>
+</div>
+
+<h4 id="p-">-p 变量</h4>
+
+<p>类似-f选项。不传参数会显示所有的变量的值。传参数只会显示对应的变量的值。</p>
+
+<h2 id="section-3">常用变量使用方法</h2>
+
+<h3 id="parameter">${parameter}</h3>
+
+<p>运行如下脚本：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="nv">para</span><span class="o">=</span><span class="s1">'a'</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">para</span><span class="k">}</span>
+</code></pre>
+</div>
+
+<p>运行结果为：</p>
+
+<p><code class="highlighter-rouge">a</code></p>
+
+<p>其中para是脚本的变量。也可以简写为<code class="highlighter-rouge">$para</code>的形式，但是在某种情况下可能会引起歧义。</p>
+
+<p>在一个双引号（” “）里的变量引用不会禁止变量替换。所以双引号被称为部分引用，有时也称为”弱引用”。而在一个单引号里(‘ ‘)的变量替换是被禁止的，变量名只被解释为普通的字面意思。所以单引号被称为”全局引用”，有时也被称为强引用。</p>
+
+<p>未初始化的变量又一个空的值（null）但是在算术运算中会按照0来计算。</p>
+
+<p>Bash不以”类型”来区分变量。本质上来说，Bash变量是字符串，但是根据环境的不同，Bash允许变量有整数计算和比较。其中的决定因素是变量的值是不是只含有数字。</p>
+
+<h3 id="parameter-defaultparameter-default">${parameter-default}, ${parameter:-default}</h3>
+
+<p>如果变量没有被设置，使用默认值。它们之间的差别是：当一个参数已被声明，但是值是NULL的时候两者不同。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="nb">echo </span>a:<span class="k">${</span><span class="nv">a</span><span class="p">-</span><span class="s1">'a'</span><span class="k">}</span>
+<span class="nb">echo </span>a:<span class="k">${</span><span class="nv">a</span><span class="k">}</span>
+<span class="nv">a</span><span class="o">=</span>
+<span class="nb">echo </span>a:<span class="k">${</span><span class="nv">a</span><span class="p">-</span><span class="s1">'a'</span><span class="k">}</span>
+<span class="nb">echo </span>a:<span class="k">${</span><span class="nv">a</span><span class="k">}</span>
+
+<span class="nb">echo </span>b:<span class="k">${</span><span class="nv">b</span><span class="k">:-</span><span class="s1">'b'</span><span class="k">}</span>
+<span class="nb">echo </span>b:<span class="k">${</span><span class="nv">b</span><span class="k">}</span>
+<span class="nv">b</span><span class="o">=</span>
+<span class="nb">echo </span>b:<span class="k">${</span><span class="nv">b</span><span class="k">:-</span><span class="s1">'b'</span><span class="k">}</span>
+<span class="nb">echo </span>b:<span class="k">${</span><span class="nv">b</span><span class="k">}</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>a:a
+a:
+a:
+a:
+b:b
+b:
+b:b
+b:
+</code></pre>
+</div>
+
+<h3 id="parameterdefaultparameterdefault">${parameter=default}, ${parameter:=default}</h3>
+
+<p>如果变量parameter没有设置，把它设置成默认值.</p>
+
+<p>两种形式几乎相同，只是和上面的一样，只有当$parameter变量被声明且被设置成null值时不同</p>
+
+<h3 id="parameteraltvalueparameteraltvalue">${parameter+alt_value}, ${parameter:+alt_value}</h3>
+
+<p>如果变量parameter设置，使用alt_value作为新值，否则使用空字符串。</p>
+
+<p>除了引起的当变量被声明且值是空值时有些不同外，两种形式几乎相等。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="nb">echo </span>a:<span class="k">${</span><span class="nv">a</span><span class="p">+</span><span class="s1">'a'</span><span class="k">}</span>
+<span class="nv">a</span><span class="o">=</span>
+<span class="nb">echo </span>a:<span class="k">${</span><span class="nv">a</span><span class="p">+</span><span class="s1">'a'</span><span class="k">}</span>
+
+<span class="nb">echo </span>b:<span class="k">${</span><span class="nv">b</span>:+<span class="s1">'b'</span><span class="k">}</span>
+<span class="nv">b</span><span class="o">=</span>
+<span class="nb">echo </span>b:<span class="k">${</span><span class="nv">b</span>:+<span class="s1">'b'</span><span class="k">}</span>
+
+<span class="nb">echo </span>a:<span class="k">${</span><span class="nv">a</span><span class="p">+</span><span class="s1">'a'</span><span class="k">}</span>
+<span class="nv">a</span><span class="o">=</span>qqqqqqq
+<span class="nb">echo </span>a:<span class="k">${</span><span class="nv">a</span><span class="p">+</span><span class="s1">'a'</span><span class="k">}</span>
+
+<span class="nb">echo </span>b:<span class="k">${</span><span class="nv">b</span>:+<span class="s1">'b'</span><span class="k">}</span>
+<span class="nv">b</span><span class="o">=</span>qqqqqqq
+<span class="nb">echo </span>b:<span class="k">${</span><span class="nv">b</span>:+<span class="s1">'b'</span><span class="k">}</span>
+</code></pre>
+</div>
+
+<p>运行结果为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>a:
+a:a
+b:
+b:
+a:a
+a:a
+b:
+b:b
+</code></pre>
+</div>
+
+<h3 id="parametererrmsgparametererrmsg">${parameter?err_msg}, ${parameter:?err_msg}</h3>
+
+<p>如果变量parameter已经设置，则使用该值，否则打印err_msg错误信息。</p>
+
+<p>通常可以用于参数检查。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>: <span class="k">${</span><span class="nv">qwe</span><span class="p">?</span><span class="s2">"qwe doesnot exit"</span><span class="k">}</span>
+</code></pre>
+</div>
+
+<p>结果为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>bash: qwe: qwe doesnot exit
+</code></pre>
+</div>
+
+<h2 id="section-4">变量的扩展</h2>
+
+<h3 id="var">${#var}</h3>
+
+<p>字符串的长度</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">a</span><span class="o">=</span><span class="s1">'aaa'</span>
+<span class="nb">echo</span> <span class="k">${#</span><span class="nv">a</span><span class="k">}</span>
+</code></pre>
+</div>
+
+<p>结果为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>3
+</code></pre>
+</div>
+
+<h3 id="varpatternvarpattern">${var#Pattern}, ${var##Pattern}</h3>
+
+<p>删除从$var前端开始的最短或最长匹配$Pattern的字符串。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">a</span><span class="o">=</span><span class="s1">'abcd1234abcd1234abcd1234'</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">a</span><span class="p">#*abcd</span><span class="k">}</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">a</span><span class="p">##*abcd</span><span class="k">}</span>
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1234abcd1234abcd1234
+1234
+</code></pre>
+</div>
+
+<h3 id="varpatternvarpattern-1">${var%Pattern}, ${var%%Pattern}</h3>
+
+<p>删除从$var后端开始的最短或最长匹配$Pattern的字符串。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">a</span><span class="o">=</span><span class="s1">'abcd1234abcd1234abcd1234'</span>
+<span class="nb">echo </span>output:<span class="k">${</span><span class="nv">a</span><span class="p">%abcd*</span><span class="k">}</span>
+<span class="nb">echo </span>output:<span class="k">${</span><span class="nv">a</span><span class="p">%%abcd*</span><span class="k">}</span>
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>output:abcd1234abcd1234
+output:
+</code></pre>
+</div>
+
+<h3 id="varpos">${var:pos}</h3>
+
+<p>变量var被展开成从位移pos个字符往后的值</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">a</span><span class="o">=</span><span class="s1">'abcd'</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">a</span>:2<span class="k">}</span>
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cd
+</code></pre>
+</div>
+
+<h3 id="varposlen">${var:pos:len}</h3>
+
+<p>从变量var中展开成从位移pos的字符往后最长为len的字符串。与上一个命令用法相仿。</p>
+
+<h3 id="varpattenreplacement">${var/Patten/Replacement}</h3>
+
+<p>在变量var第一个匹配Pattern的字符串用Replacement代替</p>
+
+<h3 id="varpattenreplacement-1">${var//Patten/Replacement}</h3>
+
+<p>所有在变量var中被Pattern匹配到的都由Replacement代替。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">a</span><span class="o">=</span><span class="s1">'abcd1234abcd1234abcd'</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">a</span><span class="p">/abcd/1234</span><span class="k">}</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">a</span><span class="p">//abcd/1234</span><span class="k">}</span>
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>12341234abcd1234abcd
+12341234123412341234
+</code></pre>
+</div>
+
+<h3 id="varpatternreplacement">${var/#Pattern/Replacement}</h3>
+
+<p>如果变量<em>var</em>的<em>前缀</em>匹配模式<em>Pattern</em>,则用<em>Replacement</em>代替匹配模式的字符串.</p>
+
+<h3 id="varpatternreplacement-1">${var/%Pattern/Replacement}</h3>
+
+<p>如果变量var的后缀匹配模式Pattern,则用Replacement代替匹配模式的字符串.</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">a</span><span class="o">=</span><span class="s1">'abcd1234abcd1234abcd'</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">a</span><span class="p">/#ab/1234</span><span class="k">}</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">a</span><span class="p">/%cd/1234</span><span class="k">}</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">a</span><span class="p">/#bc/1234</span><span class="k">}</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="nv">a</span><span class="p">/%bc/1234</span><span class="k">}</span>
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1234cd1234abcd1234abcd
+abcd1234abcd1234ab1234
+abcd1234abcd1234abcd
+abcd1234abcd1234abcd
+</code></pre>
+</div>
+
+<h3 id="varprefixvarprefix">${!varprefix*}, ${!varprefix@}</h3>
+
+<p>匹配所有前面声明过的变量，并且变量名以varprefix开头.</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">abc1</span><span class="o">=</span>1
+<span class="nv">abc2</span><span class="o">=</span>a
+<span class="nv">abc3</span><span class="o">=</span>
+
+<span class="nb">echo</span> <span class="k">${</span><span class="p">!abc*</span><span class="k">}</span>
+<span class="nb">echo</span> <span class="k">${</span><span class="p">!abc@</span><span class="k">}</span>
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>abc1 abc2 abc3
+abc1 abc2 abc3
+</code></pre>
+</div>
+
+
+</div>
+
+<div>
+	
+	<div class="eof"></div>
+	
+</div>
+
+<div class="share">
+    <p>Share this post with: </p>
+	<a href="https://twitter.com/intent/tweet?text=shell脚本变量处理和扩展@1335133044&amp;url=https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E5%8F%98%E9%87%8F%E5%A4%84%E7%90%86%E5%92%8C%E6%89%A9%E5%B1%95.html" class="twitter-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://www.facebook.com/sharer/sharer.php?u=https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E5%8F%98%E9%87%8F%E5%A4%84%E7%90%86%E5%92%8C%E6%89%A9%E5%B1%95.html" class="facebook-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://plus.google.com/share?url=https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E5%8F%98%E9%87%8F%E5%A4%84%E7%90%86%E5%92%8C%E6%89%A9%E5%B1%95.html" class="googleplus-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+</div>
+
+
+<div id="disqus_thread"></div>
+
+
+<script type="text/javascript">
+	    /* * * CONFIGURATION VARIABLES * * */
+		var disqus_shortname = "Fengya";
+		var disqus_identifier = "/shell/shell脚本变量处理和扩展";
+		var disqus_url = "https://fengyalv.github.io/shell/shell%E8%84%9A%E6%9C%AC%E5%8F%98%E9%87%8F%E5%A4%84%E7%90%86%E5%92%8C%E6%89%A9%E5%B1%95.html";
+		(function() {
+			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+
+ 
+</div>
+
+
+</article>
+
+  </div>
+
+</body>
+
+<foot>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <center>
+        
+		<p><a class="link" href="/Blogs/archive/">Archive</a> /
+		<a class="link" href="/Blogs/category/">Category</a> / 
+		<a class="link" href="/Blogs/tags/">Tags</a> / 
+		<a class="link" href="/Blogs/about/">About</a> /
+		<a class="link" href="/Blogs/contact/">Contact</a>
+        </p>
+
+        <span><script>document.write(new Date().getFullYear());</script></span>
+        <span>&copy;</span>
+        
+		<a class="link" href="/Blogs">Fengya</a>
+		<br>
+		<span>Theme &copy; <a class="link" href="https://twitter.com/1335133044" target="_blank"> Fengya</a> | </span>
+				<iframe
+			style="margin-left: 2px; margin-bottom:-5px;"
+			frameborder="0" scrolling="0" width="91px" height="20px"
+			src="https://ghbtns.com/github-btn.html?user=Fengyalv&repo=Blogs&type=star&count=true" >
+		</iframe>
+
+    </center>
+    
+  </div>
+
+</footer>
+
+    <foot>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Derictory -->
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://yandex.st/highlightjs/6.2/highlight.min.js"></script>
+
+<!-- Hit analytics -->
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- Directory -->
+
+<script src="/Blogs/js/main.js"></script>
+
+</foot>
+
+
+</foot>
+
+</html>
