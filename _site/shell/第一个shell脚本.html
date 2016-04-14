@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+
+  <link rel="stylesheet" href="/Blogs/css/main.css">
+  <link rel="canonical" href="https://fengyalv.github.io/Blogs/shell/%E7%AC%AC%E4%B8%80%E4%B8%AAshell%E8%84%9A%E6%9C%AC.html">
+  <link rel="alternate" type="application/rss+xml" title="Blog of Fengya" href="https://fengyalv.github.io/Blogs/feed.xml">
+
+<!-- Google font -->
+
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto Sans">
+
+<!-- font awesome -->
+
+<link rel="stylesheet" href="/Blogs/css/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+
+  
+
+  
+
+  </head>
+
+  <body>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>第一个shell脚本</title>
+  <meta name="description" content="第一个shell脚本">
+</head>
+
+
+  <div class="wrapper">
+          <header class="post-header">
+
+    <center><div class="post-title" itemprop="name headline">第一个shell脚本</div>
+
+		<div class="post-meta"><i class="fa fa-calendar-o"></i> <time datetime="13 Apr 2016" itemprop="datePublished">Apr 13 2016</time>
+
+		&nbsp;&nbsp;•&nbsp;&nbsp;<i class="fa fa-user-secret"></i> <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Fengya</span>
+        
+		<br>
+		<i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-pulse"></i></span>˚C</span>
+	</div>
+
+        
+        <div class="post-tags">
+        
+		<a class="post-tags-item" href="/tags/">shell</a>
+        
+		<a class="post-tags-item" href="/tags/">linux</a>
+        
+		<a class="post-tags-item" href="/tags/">mac</a>
+        
+	</div>
+    </center>
+    
+</header>
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="post-content">
+    <center>
+	
+	<p></p>
+	
+    </center>
+	<h2>Directory</h2>
+</div>
+
+<div id="category"></div>
+
+<div class="post-content" itemprop="articleBody">
+    <h1 id="shell">第一个shell脚本</h1>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">echo</span> <span class="s2">"Hello world!"</span>
+</code></pre>
+</div>
+
+<h2 id="section">1、关于#！</h2>
+
+<p>在脚本开头的 sha-bang (#!) 是告诉系统这个文件是由特定命令解释器解释的一组命令。 那个 #! 实际上是两个字节的 魔数, 魔数是指定文件类型的特殊记号，在此是表示这是一个可执行的shell脚本（键入 man magic可了解更多的信息）。紧跟着#!的是一个路径名.这个路径名是解释这个脚本内命令的命令解释器程序的路径：可能是一个shell，也可能是一个编程语言或者是一个软件包程序。这个命令解释器能执行脚本内的命令语句。它从脚本开头（即从#!所在行的下一行）起执行，但是忽略注释行。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+<span class="c">#!/bin/bash</span>
+<span class="c">#!/usr/bin/perl</span>
+<span class="c">#!/usr/bin/tcl</span>
+<span class="c">#!/bin/sed -f</span>
+<span class="c">#!/usr/awk -f</span>
+</code></pre>
+</div>
+
+<p>上面每一个脚本头行都是不同的命令解释器，如果第一行是/bin/sh, 那就是默认的Shell(Linux系统中bash是默认的shell)，否则的话就是其他的解释器.如果使用#!/bin/sh（因为大多不同的商业UNIX都使用Bourne shell为默认shell）可以使脚本能够移植到非Linux的机器上，虽然这样做你将不能使用Bash许多特有的属性。但这样做的脚本遵循 POSIX sh标准.</p>
+
+<p>值得注意的是，在”#!”后面提供的路径必须是正确的，否则你运行脚本只会收到通常像”Command not found”那样的错误信息。</p>
+
+<p>如果脚本程序只是由一组普通的系统命令而没有使用Shell内置命令的话#!将被忽略。再次提醒使用#!/bin/sh将调用默认的命令解释器，这在Linux系统上是/bin/bash.</p>
+
+<h2 id="echo">2、关于echo</h2>
+
+<p>echo命令是一个系统的内建命令（builtin）。用于I/O操作。在这里我们利用echo命令来输出一行字符串。</p>
+
+<h2 id="section-1">3、关于运行方式</h2>
+
+<p>接着尝试运行这个脚本：</p>
+
+<p><code class="highlighter-rouge">Hello world!</code></p>
+
+<p>可以使用的方法有(假设文件的名字为hello.sh)：</p>
+
+<p>1.<code class="highlighter-rouge">bash hello.sh</code></p>
+
+<p>直接使用bash脚本运行hello.sh 这个脚本</p>
+
+<p>2.<code class="highlighter-rouge">chmod +x hello.sh</code></p>
+
+<p><code class="highlighter-rouge">./hello.sh</code></p>
+
+<p>给这个脚本添加运行权限之后直接调用。运行时脚本会根据#！后面的内容确定运行脚本的程序。即使用/bin/bash 。</p>
+
+<p>与此类似的，我们还可以将脚本放入系统环境变量的search path里面。比如在mac下的/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin之类的目录下。这样就能够直接用<code class="highlighter-rouge">hello.sh</code>这种方式来运行这个脚本了。</p>
+
+</div>
+
+<div>
+	
+	<div class="eof"></div>
+	
+</div>
+
+<div class="share">
+    <p>Share this post with: </p>
+	<a href="https://twitter.com/intent/tweet?text=第一个shell脚本@1335133044&amp;url=https://fengyalv.github.io/Blogs/shell/%E7%AC%AC%E4%B8%80%E4%B8%AAshell%E8%84%9A%E6%9C%AC.html" class="twitter-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://www.facebook.com/sharer/sharer.php?u=https://fengyalv.github.io/Blogs/shell/%E7%AC%AC%E4%B8%80%E4%B8%AAshell%E8%84%9A%E6%9C%AC.html" class="facebook-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://plus.google.com/share?url=https://fengyalv.github.io/Blogs/shell/%E7%AC%AC%E4%B8%80%E4%B8%AAshell%E8%84%9A%E6%9C%AC.html" class="googleplus-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+</div>
+
+
+<div id="disqus_thread"></div>
+
+
+<script type="text/javascript">
+	    /* * * CONFIGURATION VARIABLES * * */
+		var disqus_shortname = "Fengya";
+		var disqus_identifier = "/shell/第一个shell脚本";
+		var disqus_url = "https://fengyalv.github.io/shell/%E7%AC%AC%E4%B8%80%E4%B8%AAshell%E8%84%9A%E6%9C%AC.html";
+		(function() {
+			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+
+ 
+</div>
+
+
+</article>
+
+  </div>
+
+</body>
+
+<foot>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <center>
+        
+		<p><a class="link" href="/Blogs/archive/">Archive</a> /
+		<a class="link" href="/Blogs/category/">Category</a> / 
+		<a class="link" href="/Blogs/tags/">Tags</a> / 
+		<a class="link" href="/Blogs/about/">About</a> /
+		<a class="link" href="/Blogs/contact/">Contact</a>
+        </p>
+
+        <span><script>document.write(new Date().getFullYear());</script></span>
+        <span>&copy;</span>
+        
+		<a class="link" href="/Blogs">Fengya</a>
+		<br>
+		<span>Theme &copy; <a class="link" href="https://twitter.com/1335133044" target="_blank"> Fengya</a> | </span>
+				<iframe
+			style="margin-left: 2px; margin-bottom:-5px;"
+			frameborder="0" scrolling="0" width="91px" height="20px"
+			src="https://ghbtns.com/github-btn.html?user=Fengyalv&repo=Blogs&type=star&count=true" >
+		</iframe>
+
+    </center>
+    
+  </div>
+
+</footer>
+
+    <foot>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Derictory -->
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://yandex.st/highlightjs/6.2/highlight.min.js"></script>
+
+<!-- Hit analytics -->
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- Directory -->
+
+<script src="/Blogs/js/main.js"></script>
+
+</foot>
+
+
+</foot>
+
+</html>
