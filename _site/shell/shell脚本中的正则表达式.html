@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+
+  <link rel="stylesheet" href="/Blogs/css/main.css">
+  <link rel="canonical" href="https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html">
+  <link rel="alternate" type="application/rss+xml" title="Blog of Fengya" href="https://fengyalv.github.io/Blogs/feed.xml">
+
+<!-- Google font -->
+
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto Sans">
+
+<!-- font awesome -->
+
+<link rel="stylesheet" href="/Blogs/css/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+
+  
+
+  
+
+  </head>
+
+  <body>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>shell中的正则表达式和通配符</title>
+  <meta name="description" content="shell中的正则表达式和通配符">
+</head>
+
+
+  <div class="wrapper">
+          <header class="post-header">
+
+    <center><div class="post-title" itemprop="name headline">shell中的正则表达式和通配符</div>
+
+		<div class="post-meta"><i class="fa fa-calendar-o"></i> <time datetime="15 Apr 2016" itemprop="datePublished">Apr 15 2016</time>
+
+		&nbsp;&nbsp;•&nbsp;&nbsp;<i class="fa fa-user-secret"></i> <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Fengya</span>
+        
+		<br>
+		<i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-pulse"></i></span>˚C</span>
+	</div>
+
+        
+        <div class="post-tags">
+        
+		<a class="post-tags-item" href="/Blogs/tags/">shell</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">linux</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">mac</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">正则表达式</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">通配符</a>
+        
+	</div>
+    </center>
+    
+</header>
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="post-content">
+    <center>
+	
+	<p></p>
+	
+    </center>
+	<h2>Directory</h2>
+</div>
+
+<div id="category"></div>
+
+<div class="post-content" itemprop="articleBody">
+    <h1 id="shell">shell中的正则表达式和通配符</h1>
+
+<h2 id="section">正则表达式</h2>
+
+<p>正则表达式包含以下一个或多个组成部分</p>
+
+<blockquote>
+  <p>字符集：一组字符</p>
+</blockquote>
+
+<blockquote>
+  <p>锚：表领了正则表达式在文本中要匹配的位置。例如^和$</p>
+</blockquote>
+
+<blockquote>
+  <p>修饰符：用于展开或者缩小正则表达式匹配文本行的范围。例如*,(),\。</p>
+</blockquote>
+
+<h3 id="section-1">正则表达式主要的内容</h3>
+
+<h4 id="section-2">星号*</h4>
+
+<p>匹配前一个字符任意多次（含0）。</p>
+
+<p>例如：“123*”表示匹配12+任意多次的3</p>
+
+<h4 id="section-3">点.</h4>
+
+<p>匹配除了换行以外的任意一个字符</p>
+
+<p>例如：“12.”会匹配12+任意一个字符（包括空格），但不匹配12，因为这个位置少了一个字符</p>
+
+<h4 id="section-4">^</h4>
+
+<p>匹配一行的开头。也有可能表示否定一个字符集。</p>
+
+<h4 id="section-5">$</h4>
+
+<p>匹配行尾。</p>
+
+<p>因此可知“^$”可以用于匹配空行</p>
+
+<h4 id="section-6">方括号[]</h4>
+
+<p>表示匹配括号中的一个字符。</p>
+
+<p>例如：</p>
+
+<p>“[xyz]”会匹配字符x或者y或者z</p>
+
+<p>“[c-n]”匹配从字符c到n之间的任意一个字符</p>
+
+<p>“[B-Pk-y]” 匹配从B到P 或从k到y的任意一个字符.</p>
+
+<p>“[a-z0-9]” 匹配任意小写字母或数字.</p>
+
+<p>”[^b-d]” 匹配除了从b到d范围内所有的字符. 这是正则表达式中反转意思或取否的一个例子。</p>
+
+<h4 id="section-7">反斜杠\</h4>
+
+<p>转义字符，使一个字符表示其字面上的意思。</p>
+
+<h4 id="section-8">尖角号（须转义）\&lt;\&gt;</h4>
+
+<p>表示单词的边界。</p>
+
+<p>例如：“\&lt;the\&gt;”会匹配单词the，但是不会匹配them等。</p>
+
+<h3 id="section-9">正则表达式的扩展符号</h3>
+
+<h4 id="section-10">问号？</h4>
+
+<p>匹配0个或者1个前面的字符</p>
+
+<h4 id="section-11">加号+</h4>
+
+<p>匹配1个或者多个前面的字符。与*相似，但是不匹配0个字符。</p>
+
+<h4 id="section-12">大括号\{\}（须转义）</h4>
+
+<p>指示前面正则表达式的匹配的次数。</p>
+
+<p>例如“[0-9]\{5\}”精确匹配5个数字。</p>
+
+<h4 id="section-13">圆括号()</h4>
+
+<p>括起一组正则表达式用于做或操作之类。</p>
+
+<h4 id="section-14">竖线|</h4>
+
+<p>或操作，用于匹配一组字符。</p>
+
+<p>例如：</p>
+
+<p>“(0-5) | (a-c)”会匹配一个0-5的数字或者a-c的字母。</p>
+
+<h3 id="posix">POSIX字符类</h3>
+
+<p>[:alnum:] 匹配字母和数字.等同于A-Za-z0-9.</p>
+
+<p>[:alpha:] 匹配字母. 等同于A-Za-z.</p>
+
+<p>[:blank:] 匹配一个空格或是一个制表符(tab).</p>
+
+<p>[:cntrl:] 匹配控制字符.</p>
+
+<p>[:digit:] 匹配(十进制)数字. 等同于0-9.</p>
+
+<p><code class="highlighter-rouge">[:graph:]</code>(可打印的图形字符). 匹配 ASCII 码值的33 - 126之间的字符. 这和下面提到的[:print:]一样,但是不包括空格字符.</p>
+
+<p>[:lower:] 匹配小写字母. 等同于a-z.</p>
+
+<p>[:print:] (可打印字符). 匹配 ASCII码值 32 - 126之间的字符. 这和上面提到的<code class="highlighter-rouge">[​:graph:​]</code> 一样,但是增多一个空格字符。</p>
+
+<p>[:space:] 匹配空白字符 (空格符和水平制表符).</p>
+
+<p>[:upper:] 匹配大写字母. 等同于A-Z.</p>
+
+<p>[:xdigit:] 匹配十六进制数字. 等同于0-9A-Fa-f.</p>
+
+<h2 id="section-15">通配符</h2>
+
+<p>Bash本身没有正则表达式的功能.在脚本里，使用正则表达式的是命令和软件包，例如sed和awk，它们可以解释正则表达式.</p>
+
+<p>Bash所做的是展开文件名扩展，这就是所谓的通配(globbing) ，但它不是使用标准的正则表达式. 而是使用通配符. 通配解释标准的通配符：和?, 方括号括起来的字符,还有其他的一些特殊的字符(比如说^用来表示取反匹配).然而通配机制的通配符有很大的局限性. 包含有号的字符串将不会匹配以点开头的文件，例如.bashrc另外,通配机制的? 字符和正则表达式中表示的意思不一样.</p>
+
+<h3 id="section-16">通配符种类</h3>
+
+<h4 id="section-17">星号*</h4>
+
+<p>匹配 0 或多个字符</p>
+
+<h4 id="section-18">问号？</h4>
+
+<p>匹配任意一个字符，但是必须有一个字符。</p>
+
+<h4 id="list">[list]</h4>
+
+<p>匹配 list 中的任意单一字符。注意只能有一个。</p>
+
+<h4 id="list-1">[!list]</h4>
+
+<p>匹配除了 list 中的任意单一字符。注意只能有一个。</p>
+
+<h4 id="a-c">[a-c]</h4>
+
+<p>匹配a到c的任一个字符</p>
+
+<h4 id="string1string2">{string1,string2…}</h4>
+
+<p>匹配括号里面的任一个字符串。</p>
+
+</div>
+
+<div>
+	
+	<div class="eof"></div>
+	
+</div>
+
+<div class="share">
+    <p>Share this post with: </p>
+	<a href="https://twitter.com/intent/tweet?text=shell中的正则表达式和通配符@1335133044&amp;url=https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html" class="twitter-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://www.facebook.com/sharer/sharer.php?u=https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html" class="facebook-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://plus.google.com/share?url=https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html" class="googleplus-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+</div>
+
+
+<div id="disqus_thread"></div>
+
+
+<script type="text/javascript">
+	    /* * * CONFIGURATION VARIABLES * * */
+		var disqus_shortname = "Fengya";
+		var disqus_identifier = "/shell/shell脚本中的正则表达式";
+		var disqus_url = "https://fengyalv.github.io/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html";
+		(function() {
+			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+
+ 
+</div>
+
+
+</article>
+
+  </div>
+
+</body>
+
+<foot>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <center>
+        
+		<p><a class="link" href="/Blogs/archive/">Archive</a> /
+		<a class="link" href="/Blogs/category/">Category</a> / 
+		<a class="link" href="/Blogs/tags/">Tags</a> / 
+		<a class="link" href="/Blogs/about/">About</a> /
+		<a class="link" href="/Blogs/contact/">Contact</a>
+        </p>
+
+        <span><script>document.write(new Date().getFullYear());</script></span>
+        <span>&copy;</span>
+        
+		<a class="link" href="/Blogs">Fengya</a>
+		<br>
+		<span>Theme &copy; <a class="link" href="https://twitter.com/1335133044" target="_blank"> Fengya</a> | </span>
+				<iframe
+			style="margin-left: 2px; margin-bottom:-5px;"
+			frameborder="0" scrolling="0" width="91px" height="20px"
+			src="https://ghbtns.com/github-btn.html?user=Fengyalv&repo=Blogs&type=star&count=true" >
+		</iframe>
+
+    </center>
+    
+  </div>
+
+</footer>
+
+    <foot>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Derictory -->
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://yandex.st/highlightjs/6.2/highlight.min.js"></script>
+
+<!-- Hit analytics -->
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- Directory -->
+
+<script src="/Blogs/js/main.js"></script>
+
+</foot>
+
+
+</foot>
+
+</html>

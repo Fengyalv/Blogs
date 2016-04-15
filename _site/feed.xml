@@ -6,9 +6,182 @@
 </description>
     <link>https://fengyalv.github.io/Blogs/</link>
     <atom:link href="https://fengyalv.github.io/Blogs/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 14 Apr 2016 21:22:44 +0800</pubDate>
-    <lastBuildDate>Thu, 14 Apr 2016 21:22:44 +0800</lastBuildDate>
+    <pubDate>Fri, 15 Apr 2016 18:03:37 +0800</pubDate>
+    <lastBuildDate>Fri, 15 Apr 2016 18:03:37 +0800</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>shell中的正则表达式和通配符</title>
+        <description>&lt;h1 id=&quot;shell&quot;&gt;shell中的正则表达式和通配符&lt;/h1&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;正则表达式&lt;/h2&gt;
+
+&lt;p&gt;正则表达式包含以下一个或多个组成部分&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;字符集：一组字符&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;锚：表领了正则表达式在文本中要匹配的位置。例如^和$&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;修饰符：用于展开或者缩小正则表达式匹配文本行的范围。例如*,(),\。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;正则表达式主要的内容&lt;/h3&gt;
+
+&lt;h4 id=&quot;section-2&quot;&gt;星号*&lt;/h4&gt;
+
+&lt;p&gt;匹配前一个字符任意多次（含0）。&lt;/p&gt;
+
+&lt;p&gt;例如：“123*”表示匹配12+任意多次的3&lt;/p&gt;
+
+&lt;h4 id=&quot;section-3&quot;&gt;点.&lt;/h4&gt;
+
+&lt;p&gt;匹配除了换行以外的任意一个字符&lt;/p&gt;
+
+&lt;p&gt;例如：“12.”会匹配12+任意一个字符（包括空格），但不匹配12，因为这个位置少了一个字符&lt;/p&gt;
+
+&lt;h4 id=&quot;section-4&quot;&gt;^&lt;/h4&gt;
+
+&lt;p&gt;匹配一行的开头。也有可能表示否定一个字符集。&lt;/p&gt;
+
+&lt;h4 id=&quot;section-5&quot;&gt;$&lt;/h4&gt;
+
+&lt;p&gt;匹配行尾。&lt;/p&gt;
+
+&lt;p&gt;因此可知“^$”可以用于匹配空行&lt;/p&gt;
+
+&lt;h4 id=&quot;section-6&quot;&gt;方括号[]&lt;/h4&gt;
+
+&lt;p&gt;表示匹配括号中的一个字符。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;p&gt;“[xyz]”会匹配字符x或者y或者z&lt;/p&gt;
+
+&lt;p&gt;“[c-n]”匹配从字符c到n之间的任意一个字符&lt;/p&gt;
+
+&lt;p&gt;“[B-Pk-y]” 匹配从B到P 或从k到y的任意一个字符.&lt;/p&gt;
+
+&lt;p&gt;“[a-z0-9]” 匹配任意小写字母或数字.&lt;/p&gt;
+
+&lt;p&gt;”[^b-d]” 匹配除了从b到d范围内所有的字符. 这是正则表达式中反转意思或取否的一个例子。&lt;/p&gt;
+
+&lt;h4 id=&quot;section-7&quot;&gt;反斜杠\&lt;/h4&gt;
+
+&lt;p&gt;转义字符，使一个字符表示其字面上的意思。&lt;/p&gt;
+
+&lt;h4 id=&quot;section-8&quot;&gt;尖角号（须转义）\&amp;lt;\&amp;gt;&lt;/h4&gt;
+
+&lt;p&gt;表示单词的边界。&lt;/p&gt;
+
+&lt;p&gt;例如：“\&amp;lt;the\&amp;gt;”会匹配单词the，但是不会匹配them等。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-9&quot;&gt;正则表达式的扩展符号&lt;/h3&gt;
+
+&lt;h4 id=&quot;section-10&quot;&gt;问号？&lt;/h4&gt;
+
+&lt;p&gt;匹配0个或者1个前面的字符&lt;/p&gt;
+
+&lt;h4 id=&quot;section-11&quot;&gt;加号+&lt;/h4&gt;
+
+&lt;p&gt;匹配1个或者多个前面的字符。与*相似，但是不匹配0个字符。&lt;/p&gt;
+
+&lt;h4 id=&quot;section-12&quot;&gt;大括号\{\}（须转义）&lt;/h4&gt;
+
+&lt;p&gt;指示前面正则表达式的匹配的次数。&lt;/p&gt;
+
+&lt;p&gt;例如“[0-9]\{5\}”精确匹配5个数字。&lt;/p&gt;
+
+&lt;h4 id=&quot;section-13&quot;&gt;圆括号()&lt;/h4&gt;
+
+&lt;p&gt;括起一组正则表达式用于做或操作之类。&lt;/p&gt;
+
+&lt;h4 id=&quot;section-14&quot;&gt;竖线|&lt;/h4&gt;
+
+&lt;p&gt;或操作，用于匹配一组字符。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;p&gt;“(0-5) | (a-c)”会匹配一个0-5的数字或者a-c的字母。&lt;/p&gt;
+
+&lt;h3 id=&quot;posix&quot;&gt;POSIX字符类&lt;/h3&gt;
+
+&lt;p&gt;[:alnum:] 匹配字母和数字.等同于A-Za-z0-9.&lt;/p&gt;
+
+&lt;p&gt;[:alpha:] 匹配字母. 等同于A-Za-z.&lt;/p&gt;
+
+&lt;p&gt;[:blank:] 匹配一个空格或是一个制表符(tab).&lt;/p&gt;
+
+&lt;p&gt;[:cntrl:] 匹配控制字符.&lt;/p&gt;
+
+&lt;p&gt;[:digit:] 匹配(十进制)数字. 等同于0-9.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[:graph:]&lt;/code&gt;(可打印的图形字符). 匹配 ASCII 码值的33 - 126之间的字符. 这和下面提到的[:print:]一样,但是不包括空格字符.&lt;/p&gt;
+
+&lt;p&gt;[:lower:] 匹配小写字母. 等同于a-z.&lt;/p&gt;
+
+&lt;p&gt;[:print:] (可打印字符). 匹配 ASCII码值 32 - 126之间的字符. 这和上面提到的&lt;code class=&quot;highlighter-rouge&quot;&gt;[​:graph:​]&lt;/code&gt; 一样,但是增多一个空格字符。&lt;/p&gt;
+
+&lt;p&gt;[:space:] 匹配空白字符 (空格符和水平制表符).&lt;/p&gt;
+
+&lt;p&gt;[:upper:] 匹配大写字母. 等同于A-Z.&lt;/p&gt;
+
+&lt;p&gt;[:xdigit:] 匹配十六进制数字. 等同于0-9A-Fa-f.&lt;/p&gt;
+
+&lt;h2 id=&quot;section-15&quot;&gt;通配符&lt;/h2&gt;
+
+&lt;p&gt;Bash本身没有正则表达式的功能.在脚本里，使用正则表达式的是命令和软件包，例如sed和awk，它们可以解释正则表达式.&lt;/p&gt;
+
+&lt;p&gt;Bash所做的是展开文件名扩展，这就是所谓的通配(globbing) ，但它不是使用标准的正则表达式. 而是使用通配符. 通配解释标准的通配符：和?, 方括号括起来的字符,还有其他的一些特殊的字符(比如说^用来表示取反匹配).然而通配机制的通配符有很大的局限性. 包含有号的字符串将不会匹配以点开头的文件，例如.bashrc另外,通配机制的? 字符和正则表达式中表示的意思不一样.&lt;/p&gt;
+
+&lt;h3 id=&quot;section-16&quot;&gt;通配符种类&lt;/h3&gt;
+
+&lt;h4 id=&quot;section-17&quot;&gt;星号*&lt;/h4&gt;
+
+&lt;p&gt;匹配 0 或多个字符&lt;/p&gt;
+
+&lt;h4 id=&quot;section-18&quot;&gt;问号？&lt;/h4&gt;
+
+&lt;p&gt;匹配任意一个字符，但是必须有一个字符。&lt;/p&gt;
+
+&lt;h4 id=&quot;list&quot;&gt;[list]&lt;/h4&gt;
+
+&lt;p&gt;匹配 list 中的任意单一字符。注意只能有一个。&lt;/p&gt;
+
+&lt;h4 id=&quot;list-1&quot;&gt;[!list]&lt;/h4&gt;
+
+&lt;p&gt;匹配除了 list 中的任意单一字符。注意只能有一个。&lt;/p&gt;
+
+&lt;h4 id=&quot;a-c&quot;&gt;[a-c]&lt;/h4&gt;
+
+&lt;p&gt;匹配a到c的任一个字符&lt;/p&gt;
+
+&lt;h4 id=&quot;string1string2&quot;&gt;{string1,string2…}&lt;/h4&gt;
+
+&lt;p&gt;匹配括号里面的任一个字符串。&lt;/p&gt;
+</description>
+        <pubDate>Fri, 15 Apr 2016 00:00:00 +0800</pubDate>
+        <link>https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html</link>
+        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html</guid>
+        
+        <category>shell</category>
+        
+        <category>linux</category>
+        
+        <category>mac</category>
+        
+        <category>正则表达式</category>
+        
+        <category>通配符</category>
+        
+        
+        <category>shell</category>
+        
+      </item>
     
       <item>
         <title>shell脚本变量处理和扩展</title>
