@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+
+  <link rel="stylesheet" href="/Blogs/css/main.css">
+  <link rel="canonical" href="https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E4%B8%8E%E5%AD%90shell.html">
+  <link rel="alternate" type="application/rss+xml" title="Blog of Fengya" href="https://fengyalv.github.io/Blogs/feed.xml">
+
+<!-- Google font -->
+
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto Sans">
+
+<!-- font awesome -->
+
+<link rel="stylesheet" href="/Blogs/css/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+
+  
+
+  
+
+  </head>
+
+  <body>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>shell脚本中的函数与子shell</title>
+  <meta name="description" content="shell脚本中的函数与子shell">
+</head>
+
+
+  <div class="wrapper">
+          <header class="post-header">
+
+    <center><div class="post-title" itemprop="name headline">shell脚本中的函数与子shell</div>
+
+		<div class="post-meta"><i class="fa fa-calendar-o"></i> <time datetime="16 Apr 2016" itemprop="datePublished">Apr 16 2016</time>
+
+		&nbsp;&nbsp;•&nbsp;&nbsp;<i class="fa fa-user-secret"></i> <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Fengya</span>
+        
+		<br>
+		<i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-pulse"></i></span>˚C</span>
+	</div>
+
+        
+        <div class="post-tags">
+        
+		<a class="post-tags-item" href="/Blogs/tags/">shell</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">linux</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">mac</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">函数</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">subshell</a>
+        
+	</div>
+    </center>
+    
+</header>
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="post-content">
+    <center>
+	
+	<p></p>
+	
+    </center>
+	<h2>Directory</h2>
+</div>
+
+<div id="category"></div>
+
+<div class="post-content" itemprop="articleBody">
+    <h1 id="shellshell">shell脚本中的函数与子shell</h1>
+
+<h2 id="section">函数</h2>
+
+<h3 id="section-1">函数的使用</h3>
+
+<p>bash中也有函数。一个函数就是一个子程序，是用于实现一串操作的代码块。bash中的函数的形式如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">function </span>function_name<span class="o">(){</span>
+  
+<span class="o">}</span>
+
+function_name<span class="o">(){</span>
+  
+<span class="o">}</span>
+
+function_name<span class="o">()</span>
+<span class="o">{</span>
+  
+<span class="o">}</span>
+</code></pre>
+</div>
+
+<p>以上三种形式的函数均可达到目的。</p>
+
+<p>使用函数的时候只要简单的使用函数的名字即可。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash </span>
+
+<span class="k">function </span>abc<span class="o">(){</span>
+  <span class="nb">echo </span>abc
+<span class="o">}</span>
+
+abc
+</code></pre>
+</div>
+
+<p>其输出结果为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>abc
+</code></pre>
+</div>
+
+<p>bash中的函数必须在其第一次调用之前被完成。没有如c语言中那种函数声明的形式。即使提前定义了函数的变量也不可以。但是只要执行顺序中，函数的定义在函数的使用之前即可。</p>
+
+<p>考虑如下情况：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">function </span>f1<span class="o">(){</span>
+  <span class="nb">echo </span>abc
+  f2
+<span class="o">}</span>
+
+<span class="k">function </span>f2<span class="o">(){</span>
+  <span class="nb">echo </span>cde
+<span class="o">}</span>
+
+f1
+</code></pre>
+</div>
+
+<p>这种情况中，虽然看起来f2的使用在其定义之前已经有过一次了，但是实际运行当中我们不难发现f2先定义了之后f1才调用了f2。因此这种情况也是可以的。</p>
+
+<p>函数是可以嵌套的。</p>
+
+<p>考虑如下情况：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>f1<span class="o">(){</span>
+  f2<span class="o">(){</span>
+    <span class="nb">echo </span>abc
+	<span class="o">}</span>
+<span class="o">}</span>
+
+f2
+f1
+f2
+</code></pre>
+</div>
+
+<p>其输出结果类似于：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>bash: f2: command not found
+
+abc
+</code></pre>
+</div>
+
+<p>第一行表示没有找到f2，第二行执行了f1，第三行找到了f2。</p>
+
+<p>函数声明也可能出现在任何看起来不可能的应该有一个命令出现的地方。</p>
+
+<p>由以上内容可以看出，其实函数的定义其实只是一种命令。而bash脚本是一种线性执行的语言。因此只要保证函数使用的流程正确，就可以将函数应用在各种可能的地方。</p>
+
+<h3 id="section-2">函数的传参</h3>
+
+<p>bash的函数能够接受参数并返回状态退出码。</p>
+
+<p>函数以位置来引用传递来的参数，类似脚本的参数传递。例如$1,$2等等。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">function </span>abc<span class="o">(){</span>
+  <span class="nb">echo</span> <span class="nv">$1</span>
+  <span class="k">return </span>22
+<span class="o">}</span>
+
+abc cde
+<span class="nb">echo</span> <span class="nv">$?</span>
+</code></pre>
+</div>
+
+<p>以上内容为一个最简单的函数的传参及返回值的情况。</p>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cde
+22
+</code></pre>
+</div>
+
+<p>此外，shift命令也可以应用于传递给函数的参数，像工作在脚本的参数中那样。</p>
+
+<p>函数接受参数通常只是接受参数的值。因此我们也可以传递间接引用给函数。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">function </span>echoabc<span class="o">(){</span>
+  <span class="nb">echo</span> <span class="nv">$1</span>
+<span class="o">}</span>
+
+<span class="nv">a</span><span class="o">=</span>b
+<span class="nv">b</span><span class="o">=</span>c
+
+echoabc <span class="k">${</span><span class="nv">a</span><span class="k">}</span>
+echoabc <span class="k">${</span><span class="p">!a</span><span class="k">}</span>
+
+<span class="nv">b</span><span class="o">=</span>d
+
+echoabc <span class="k">${</span><span class="nv">a</span><span class="k">}</span>
+echoabc <span class="k">${</span><span class="p">!a</span><span class="k">}</span> 
+</code></pre>
+</div>
+
+<p>以上内容的输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>b
+c
+b
+d
+</code></pre>
+</div>
+
+<p>与此同理，我们可以在函数中修改间接引用中的值：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="k">function </span>changeabc<span class="o">(){</span>
+  <span class="nb">echo</span> <span class="nv">$1</span>
+  <span class="nb">eval</span> <span class="s2">"echo </span><span class="se">\$</span><span class="nv">$1</span><span class="s2">"</span>
+  <span class="nb">eval</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">=xyz"</span>
+  <span class="nb">eval</span> <span class="s2">"echo </span><span class="se">\$</span><span class="nv">$1</span><span class="s2">"</span>
+<span class="o">}</span>
+
+<span class="nv">var1</span><span class="o">=</span>var2
+<span class="nv">var2</span><span class="o">=</span>abc
+
+changeabc <span class="nv">$var1</span>
+<span class="nb">echo</span> <span class="nv">$var2</span>
+<span class="nb">eval</span> <span class="s2">"echo </span><span class="se">\$</span><span class="nv">$var1</span><span class="s2">"</span>
+</code></pre>
+</div>
+
+<p>以上内容的输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var2
+abc
+xyz
+xyz
+xyz
+</code></pre>
+</div>
+
+<h3 id="section-3">函数的退出码</h3>
+
+<p>函数返回一个被称为退出状态的值. 退出状态可以由return来指定statement, 否则函数的退出状态是函数最后一个执行命令的退出状态(0表示成功，非0表示出错代码). 退出状态(exit status)可以在脚本中由$? 引用. 这个机制使脚本函数也可以像C函数一样有一个”返回值”.</p>
+
+<p>可以用来返回异常状态。</p>
+
+<h3 id="section-4">函数的重定向</h3>
+
+<p>函数的本质也是一个代码块，因此我们可以重定向其标准输入输出。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">function </span>echoabc<span class="o">(){</span>
+	<span class="nb">read </span>line
+	<span class="k">while</span> <span class="o">[</span> -n <span class="s2">"</span><span class="nv">$line</span><span class="s2">"</span> <span class="o">]</span>
+	<span class="k">do
+		</span><span class="nb">echo</span> <span class="nv">$line</span>
+		<span class="nb">read </span>line
+	<span class="k">done</span>
+<span class="o">}</span> <span class="sh">&lt;&lt; strings
+abcd
+cdef
+strings
+
+</span>echoabc
+</code></pre>
+</div>
+
+<p>将一个heredocuments重定向到函数echoabc的输入。输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>abcd
+cdef
+</code></pre>
+</div>
+
+<h2 id="shell">子shell</h2>
+
+<p>运行一个shell脚本时会启动另一个命令解释器. 就好像你的命令是在命令行提示下被解释的一样, 类似于批处理文件里的一系列命令.每个shell脚本有效地运行在父shell(parent shell)的一个子进程里.这个父shell是指在一个控制终端或在一个xterm窗口中给你命令指示符的进程.</p>
+
+<p>shell脚本也能启动他自已的子进程. 这些子shell(即子进程)使脚本并行地，有效率地地同时运行多个子任务.</p>
+
+<p>嵌在圆括号里的一列命令在一个子shell里运行。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">(</span>
+<span class="nb">echo </span>abcd
+<span class="nb">echo </span>cdef
+<span class="o">)</span>
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>abcd
+cdef
+</code></pre>
+</div>
+
+<p>在子shell里的变量不能被这段子shell代码块之外外面的脚本访问.这些变量是不能被产生这个子shell的父进程(parent process)存取的,实际上它们是局部变量(local variables).</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">(</span><span class="nv">a</span><span class="o">=</span>b<span class="o">)</span>
+<span class="nb">echo </span>a
+</code></pre>
+</div>
+
+<p>输出为空</p>
+
+<p>在子shell中的目录更改不会影响到父shell.</p>
+
+<p>子shell可用于为一组命令设定临时的环境变量</p>
+
+<p>进程在不同的子shell中可以并行地执行.这样就允许把一个复杂的任务分成几个小的子问题来同时地处理。</p>
+
+
+</div>
+
+<div>
+	
+	<div class="eof"></div>
+	
+</div>
+
+<div class="share">
+    <p>Share this post with: </p>
+	<a href="https://twitter.com/intent/tweet?text=shell脚本中的函数与子shell@1335133044&amp;url=https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E4%B8%8E%E5%AD%90shell.html" class="twitter-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://www.facebook.com/sharer/sharer.php?u=https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E4%B8%8E%E5%AD%90shell.html" class="facebook-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://plus.google.com/share?url=https://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E4%B8%8E%E5%AD%90shell.html" class="googleplus-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+</div>
+
+
+<div id="disqus_thread"></div>
+
+
+<script type="text/javascript">
+	    /* * * CONFIGURATION VARIABLES * * */
+		var disqus_shortname = "Fengya";
+		var disqus_identifier = "/shell/shell脚本中的函数与子shell";
+		var disqus_url = "https://fengyalv.github.io/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E4%B8%8E%E5%AD%90shell.html";
+		(function() {
+			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+
+ 
+</div>
+
+
+</article>
+
+  </div>
+
+</body>
+
+<foot>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <center>
+        
+		<p><a class="link" href="/Blogs/archive/">Archive</a> /
+		<a class="link" href="/Blogs/category/">Category</a> / 
+		<a class="link" href="/Blogs/tags/">Tags</a> / 
+		<a class="link" href="/Blogs/about/">About</a> /
+		<a class="link" href="/Blogs/contact/">Contact</a>
+        </p>
+
+        <span><script>document.write(new Date().getFullYear());</script></span>
+        <span>&copy;</span>
+        
+		<a class="link" href="/Blogs">Fengya</a>
+		<br>
+		<span>Theme &copy; <a class="link" href="https://twitter.com/1335133044" target="_blank"> Fengya</a> | </span>
+				<iframe
+			style="margin-left: 2px; margin-bottom:-5px;"
+			frameborder="0" scrolling="0" width="91px" height="20px"
+			src="https://ghbtns.com/github-btn.html?user=Fengyalv&repo=Blogs&type=star&count=true" >
+		</iframe>
+
+    </center>
+    
+  </div>
+
+</footer>
+
+    <foot>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Derictory -->
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://yandex.st/highlightjs/6.2/highlight.min.js"></script>
+
+<!-- Hit analytics -->
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- Directory -->
+
+<script src="/Blogs/js/main.js"></script>
+
+</foot>
+
+
+</foot>
+
+</html>
