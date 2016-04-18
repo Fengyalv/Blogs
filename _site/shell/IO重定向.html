@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+
+  <link rel="stylesheet" href="/Blogs/css/main.css">
+  <link rel="canonical" href="https://fengyalv.github.io/Blogs/shell/IO%E9%87%8D%E5%AE%9A%E5%90%91.html">
+  <link rel="alternate" type="application/rss+xml" title="Blog of Fengya" href="https://fengyalv.github.io/Blogs/feed.xml">
+
+<!-- Google font -->
+
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto Sans">
+
+<!-- font awesome -->
+
+<link rel="stylesheet" href="/Blogs/css/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+
+  
+
+  
+
+  </head>
+
+  <body>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>I/O重定向</title>
+  <meta name="description" content="I/O重定向">
+</head>
+
+
+  <div class="wrapper">
+          <header class="post-header">
+
+    <center><div class="post-title" itemprop="name headline">I/O重定向</div>
+
+		<div class="post-meta"><i class="fa fa-calendar-o"></i> <time datetime="18 Apr 2016" itemprop="datePublished">Apr 18 2016</time>
+
+		&nbsp;&nbsp;•&nbsp;&nbsp;<i class="fa fa-user-secret"></i> <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Fengya</span>
+        
+		<br>
+		<i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-pulse"></i></span>˚C</span>
+	</div>
+
+        
+        <div class="post-tags">
+        
+		<a class="post-tags-item" href="/Blogs/tags/">shell</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">linux</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">mac</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">重定向</a>
+        
+	</div>
+    </center>
+    
+</header>
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="post-content">
+    <center>
+	
+	<p></p>
+	
+    </center>
+	<h2>Directory</h2>
+</div>
+
+<div id="category"></div>
+
+<div class="post-content" itemprop="articleBody">
+    <h1 id="io">I/O重定向</h1>
+
+<p>默认情况下始终有3个”文件”处于打开状态, stdin (键盘), stdout (屏幕), and stderr (错误消息输出到屏幕上). 这3个文件和其他打开的文件都可以被重定向. 对于重定向简单的解释就是捕捉一个文件, 命令, 程序, 脚本, 或者甚至是脚本中的代码块的输出, 然后将这些输出作为输入发送到另一个文件, 命令, 程序, 或脚本中.</p>
+
+<p>每个打开的文件都会被分配一个文件描述符.stdin, stdout, 和stderr的文件描述符分别是0, 1, 和 2. 对于正在打开的额外文件, 保留了描述符3到9. 在某些时候将这些格外的文件描述符分配给stdin, stdout, 或者是stderr作为临时的副本链接是非常有用的. 在经过复杂的重定向和刷新之后需要把它们恢复成正常的样子.</p>
+
+<p>一些例子：</p>
+
+<p>文件重定向通常的用法：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+   1    COMMAND_OUTPUT &gt;
+   2       <span class="c"># 重定向stdout到一个文件.</span>
+   3       <span class="c"># 如果没有这个文件就创建, 否则就覆盖.</span>
+   4 
+   5       ls -lR &gt; dir-tree.list
+   6       <span class="c"># 创建一个包含目录树列表的文件.</span>
+   7 
+   8    : &gt; filename
+   9       <span class="c"># &gt; 会把文件"filename"截断为0长度.</span>
+  10       <span class="c"># 如果文件不存在, 那么就创建一个0长度的文件(与'touch'的效果相同).</span>
+  11       <span class="c"># : 是一个占位符, 不产生任何输出.</span>
+  12 
+  13    &gt; filename    
+  14       <span class="c"># &gt; 会把文件"filename"截断为0长度.</span>
+  15       <span class="c"># 如果文件不存在, 那么就创建一个0长度的文件(与'touch'的效果相同).</span>
+  16       <span class="c"># (与上边的": &gt;"效果相同, 但是在某些shell下可能不能工作.)</span>
+  17 
+  18    COMMAND_OUTPUT &gt;&gt;
+  19       <span class="c"># 重定向stdout到一个文件.</span>
+  20       <span class="c"># 如果文件不存在, 那么就创建它, 如果存在, 那么就追加到文件后边.</span>
+  21 
+  22 
+  23       <span class="c"># 单行重定向命令(只会影响它们所在的行):</span>
+  24       <span class="c"># --------------------------------------------------------------------</span>
+  25 
+  26    1&gt;filename
+  27       <span class="c"># 重定向stdout到文件"filename".</span>
+  28    1&gt;&gt;filename
+  29       <span class="c"># 重定向并追加stdout到文件"filename".</span>
+  30    2&gt;filename
+  31       <span class="c"># 重定向stderr到文件"filename".</span>
+  32    2&gt;&gt;filename
+  33       <span class="c"># 重定向并追加stderr到文件"filename".</span>
+  34    &amp;&gt;filename
+  35       <span class="c"># 将stdout和stderr都重定向到文件"filename".</span>
+  36 
+  37       <span class="c">#==============================================================================</span>
+  38       <span class="c"># 重定向stdout, 一次一行.</span>
+  39       <span class="nv">LOGFILE</span><span class="o">=</span>script.log
+  40 
+  41       <span class="nb">echo</span> <span class="s2">"This statement is sent to the log file, </span><span class="se">\"</span><span class="nv">$LOGFILE</span><span class="se">\"</span><span class="s2">."</span> 1&gt;<span class="nv">$LOGFILE</span>
+  42       <span class="nb">echo</span> <span class="s2">"This statement is appended to </span><span class="se">\"</span><span class="nv">$LOGFILE</span><span class="se">\"</span><span class="s2">."</span> 1&gt;&gt;<span class="nv">$LOGFILE</span>
+  43       <span class="nb">echo</span> <span class="s2">"This statement is also appended to </span><span class="se">\"</span><span class="nv">$LOGFILE</span><span class="se">\"</span><span class="s2">."</span> 1&gt;&gt;<span class="nv">$LOGFILE</span>
+  44       <span class="nb">echo</span> <span class="s2">"This statement is echoed to stdout, and will not appear in </span><span class="se">\"</span><span class="nv">$LOGFILE</span><span class="se">\"</span><span class="s2">."</span>
+  45       <span class="c"># 每行过后, 这些重定向命令会自动"reset".</span>
+  46 
+  47 
+  48 
+  49       <span class="c"># 重定向stderr, 一次一行.</span>
+  50       <span class="nv">ERRORFILE</span><span class="o">=</span>script.errors
+  51 
+  52       bad_command1 2&gt;<span class="nv">$ERRORFILE</span>       <span class="c">#  错误消息发到$ERRORFILE中.</span>
+  53       bad_command2 2&gt;&gt;<span class="nv">$ERRORFILE</span>      <span class="c">#  错误消息添加到$ERRORFILE中.</span>
+  54       bad_command3                    <span class="c">#  错误消息echo到stderr,</span>
+  55                                       <span class="c">#+ 并且不出现在$ERRORFILE中.</span>
+  56       <span class="c"># 每行过后, 这些重定向命令也会自动"reset".</span>
+  57       <span class="c">#==============================================================================</span>
+  58 
+  59 
+  60 
+  61    2&gt;&amp;1
+  62       <span class="c"># 重定向stderr到stdout.</span>
+  63       <span class="c"># 得到的错误消息与stdout一样, 发送到一个地方.</span>
+  64 
+  65    i&gt;&amp;j
+  66       <span class="c"># 重定向文件描述符i 到 j.</span>
+  67       <span class="c"># 指向i文件的所有输出都发送到j中去.</span>
+  68 
+  69    &gt;&amp;j
+  70       <span class="c"># 默认的, 重定向文件描述符1(stdout)到 j.</span>
+  71       <span class="c"># 所有传递到stdout的输出都送到j中去.</span>
+  72 
+  73    0&lt; FILENAME
+  74     &lt; FILENAME
+  75       <span class="c"># 从文件中接受输入.</span>
+  76       <span class="c"># 与"&gt;"是成对命令, 并且通常都是结合使用.</span>
+  77       <span class="c">#</span>
+  78       <span class="c"># grep search-word &lt;filename</span>
+  79 
+  80 
+  81    <span class="o">[</span>j]&lt;&gt;filename
+  82       <span class="c"># 为了读写"filename", 把文件"filename"打开, 并且分配文件描述符"j"给它.</span>
+  83       <span class="c"># 如果文件"filename"不存在, 那么就创建它.</span>
+  84       <span class="c"># 如果文件描述符"j"没指定, 那默认是fd 0, stdin.</span>
+  85       <span class="c">#</span>
+  86       <span class="c"># 这种应用通常是为了写到一个文件中指定的地方.</span>
+  87       <span class="nb">echo </span>1234567890 &gt; File    <span class="c"># 写字符串到"File".</span>
+  88       <span class="nb">exec </span>3&lt;&gt; File             <span class="c"># 打开"File"并且给它分配fd 3.</span>
+  89       <span class="nb">read</span> -n 4 &lt;&amp;3             <span class="c"># 只读4个字符.</span>
+  90       <span class="nb">echo</span> -n . &gt;&amp;3             <span class="c"># 写一个小数点.</span>
+  91       <span class="nb">exec </span>3&gt;&amp;-                 <span class="c"># 关闭fd 3.</span>
+  92       cat File                  <span class="c"># ==&gt; 1234.67890</span>
+  93       <span class="c"># 随机存储.</span>
+  94 
+  95 
+  96 
+  97    |
+  98       <span class="c"># 管道.</span>
+  99       <span class="c"># 通用目的的处理和命令链工具.</span>
+ 100       <span class="c"># 与"&gt;"很相似, 但是实际上更通用.</span>
+ 101       <span class="c"># 对于想将命令, 脚本, 文件和程序串连起来的时候很有用.</span>
+ 102       cat <span class="k">*</span>.txt | sort | uniq &gt; result-file
+ 103       <span class="c"># 对所有的.txt文件的输出进行排序, 并且删除重复行,</span>
+ 104       <span class="c"># 最后将结果保存到"result-file"中.</span>
+</code></pre>
+</div>
+
+<p>将输入输出重定向与管道相结合</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>   1 <span class="nb">command</span> &lt; input-file &gt; output-file
+   2 
+   3 command1 | command2 | command3 &gt; output-file
+</code></pre>
+</div>
+
+<p>将多个输出流重定向到一个文件上：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>   1 ls -yz &gt;&gt; command.log 2&gt;&amp;1
+   2 <span class="c">#  将错误选项"yz"的结果放到文件"command.log"中.</span>
+   3 <span class="c">#  因为stderr被重定向到这个文件中,</span>
+   4 <span class="c">#+ 所有的错误消息也就都指向那里了.</span>
+   5 
+   6 <span class="c">#  注意, 下边这个例子就不会给出相同的结果.</span>
+   7 ls -yz 2&gt;&amp;1 &gt;&gt; command.log
+   8 <span class="c">#  输出一个错误消息, 但是并不写到文件中.</span>
+   9 
+  10 <span class="c">#  如果将stdout和stderr都重定向,</span>
+  11 <span class="c">#+ 命令的顺序会有些不同.</span>
+</code></pre>
+</div>
+
+<p>关闭文件描述符</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>n&lt;&amp;-
+<span class="c">#关闭输入文件描述符n.</span>
+
+0&lt;&amp;-
+&lt;&amp;-
+<span class="c">#关闭stdin.</span>
+
+n&gt;&amp;-
+<span class="c">#关闭输出文件描述符n.</span>
+
+1&gt;&amp;-
+&gt;&amp;-
+<span class="c">#关闭stdout.</span>
+</code></pre>
+</div>
+
+<p>子进程继承了打开的文件描述符. 这就是为什么管道可以工作. 如果想阻止fd被继承, 那么可以关掉它:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>   1 <span class="c"># 只重定向stderr到一个管道.</span>
+   2 
+   3 <span class="nb">exec </span>3&gt;&amp;1                              <span class="c"># 保存当前stdout的"值".</span>
+   4 ls -l 2&gt;&amp;1 &gt;&amp;3 3&gt;&amp;- | grep bad 3&gt;&amp;-    <span class="c"># 对'grep'关闭fd 3(但不关闭'ls').</span>
+   5 <span class="c">#              ^^^^   ^^^^</span>
+   6 <span class="nb">exec </span>3&gt;&amp;-                              <span class="c"># 现在对于剩余的脚本关闭它.</span>
+</code></pre>
+</div>
+
+<h2 id="exec">exec</h2>
+
+<p>exec  命令会将stdin重定向到文件中. 从这句开始, 后边的输入就都来自于这个文件了, 而不是标准输入了(通常都是键盘输入). 这样就提供了一种按行读取文件的方法, 并且可以使用sed 和/或 awk来对每一行进行分析.</p>
+
+<p>使用exec重定向标准输入：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+   1 <span class="c">#!/bin/bash</span>
+   2 <span class="c"># 使用'exec'重定向标准输入.</span>
+   3 
+   4 
+   5 <span class="nb">exec </span>6&lt;&amp;0          <span class="c"># 将文件描述符#6与stdin链接起来.</span>
+   6                    <span class="c"># 保存了stdin.</span>
+   7 
+   8 <span class="nb">exec</span> &lt; data-file   <span class="c"># stdin被文件"data-file"所代替.</span>
+   9 
+  10 <span class="nb">read </span>a1            <span class="c"># 读取文件"data-file"的第一行.</span>
+  11 <span class="nb">read </span>a2            <span class="c"># 读取文件"data-file"的第二行.</span>
+  12 
+  13 <span class="nb">echo
+  </span>14 <span class="nb">echo</span> <span class="s2">"Following lines read from file."</span>
+  15 <span class="nb">echo</span> <span class="s2">"-------------------------------"</span>
+  16 <span class="nb">echo</span> <span class="nv">$a1</span>
+  17 <span class="nb">echo</span> <span class="nv">$a2</span>
+  18 
+  19 <span class="nb">echo</span>; <span class="nb">echo</span>; <span class="nb">echo
+  </span>20 
+  21 <span class="nb">exec </span>0&lt;&amp;6 6&lt;&amp;-
+  22 <span class="c">#  现在将stdin从fd #6中恢复, 因为刚才我们把stdin重定向到#6了,</span>
+  23 <span class="c">#+ 然后关闭fd #6 ( 6&lt;&amp;- ), 好让这个描述符继续被其他进程所使用.</span>
+  24 <span class="c">#</span>
+  25 <span class="c"># &lt;&amp;6 6&lt;&amp;-    这么做也可以.</span>
+  26 
+  27 <span class="nb">echo</span> -n <span class="s2">"Enter data  "</span>
+  28 <span class="nb">read </span>b1  <span class="c"># 现在"read"已经恢复正常了, 就是从stdin中读取.</span>
+  29 <span class="nb">echo</span> <span class="s2">"Input read from stdin."</span>
+  30 <span class="nb">echo</span> <span class="s2">"----------------------"</span>
+  31 <span class="nb">echo</span> <span class="s2">"b1 = </span><span class="nv">$b1</span><span class="s2">"</span>
+  32 
+  33 <span class="nb">echo
+  </span>34 
+  35 <span class="nb">exit </span>0
+</code></pre>
+</div>
+
+<p>例如可以这样读文件：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">exec </span>3&lt;&gt;test.sh;
+<span class="c">#打开test.sh可读写操作，与文件描述符3绑定</span>
+ 
+<span class="k">while </span><span class="nb">read </span>line&lt;&amp;3
+ <span class="k">do
+    </span><span class="nb">echo</span> <span class="nv">$line</span>;
+<span class="k">done</span>
+<span class="c">#循环读取文件描述符3（读取的是test.sh内容）</span>
+<span class="nb">exec </span>3&gt;&amp;-
+<span class="nb">exec </span>3&lt;&amp;-
+<span class="c">#关闭文件的，输入，输出绑定</span>
+</code></pre>
+</div>
+
+<p>当然一般我们可以直接重定向文件到一个代码块，相当于重定向到这个代码块的标准输入。</p>
+
+<h2 id="section">重定向到代码块</h2>
+
+<p>通常我们可以将利用将代码块的输入输出重定向的方法实现一些对于文件的操作。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># while的重定向</span>
+<span class="k">while</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span> !<span class="o">=</span> Smith <span class="o">]</span>
+<span class="k">do
+	</span><span class="nb">read </span>name
+	<span class="nb">echo</span> <span class="nv">$name</span>
+<span class="k">done</span> &lt;<span class="s2">"</span><span class="nv">$Filename</span><span class="s2">"</span>
+
+<span class="c"># 以上结构也可以这样写</span>
+<span class="nb">exec </span>3&lt;&amp;0		<span class="c"># 把标准输入绑定到文件描述符3，以便稍后恢复</span>
+<span class="nb">exec </span>0&lt;<span class="s2">"</span><span class="nv">$Filename</span><span class="s2">"</span>	<span class="c"># 重定向标准输入为这个文件</span>
+
+<span class="k">while</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span> !<span class="o">=</span> Smith <span class="o">]</span>
+<span class="k">do
+	</span><span class="nb">read </span>name
+	<span class="nb">echo</span> <span class="nv">$name</span>
+<span class="k">done
+
+</span><span class="nb">exec </span>0&lt;&amp;3		<span class="c"># 恢复标准输入</span>
+<span class="nb">exec </span>3&lt;&amp;-		<span class="c"># 关闭文件描述符3以供后续使用</span>
+
+<span class="c"># until的重定向</span>
+<span class="k">until</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span> <span class="o">=</span> Smith <span class="o">]</span>
+<span class="k">do
+	</span><span class="nb">read </span>name
+	<span class="nb">echo</span> <span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span>
+<span class="k">done</span> &lt;<span class="s2">"</span><span class="nv">$Filename</span><span class="s2">"</span>
+
+<span class="c"># for循环的重定向</span>
+<span class="nv">lineCount</span><span class="o">=</span><span class="sb">`</span>wc <span class="nv">$Filename</span> | awk <span class="s1">'{print $1}'</span><span class="sb">`</span>		<span class="c"># 统计文件的行数</span>
+
+<span class="k">for </span>name <span class="k">in</span> <span class="sb">`</span>seq <span class="nv">$lineCount</span><span class="sb">`</span>
+<span class="k">do
+	</span><span class="nb">read </span>name
+	<span class="nb">echo</span> <span class="nv">$name</span>
+	<span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span> <span class="o">=</span> Smith <span class="o">]</span>						<span class="c"># 循环到Smith的时候就退出循环</span>
+	<span class="k">then
+		</span><span class="nb">break
+	</span><span class="k">fi
+done</span> &lt;<span class="s2">"</span><span class="nv">$Filename</span><span class="s2">"</span>
+
+<span class="c"># if/then结构的重定向</span>
+<span class="k">if</span> :
+<span class="k">then
+	</span><span class="nb">read </span>name
+	<span class="nb">echo</span> <span class="s2">"</span><span class="nv">$name</span><span class="s2">"</span>
+<span class="k">fi</span> &lt;<span class="s2">"</span><span class="nv">$Filename</span><span class="s2">"</span>			<span class="c"># 这个重定向只读了文件中的一行</span>
+</code></pre>
+</div>
+
+<h2 id="here-documents">Here Documents</h2>
+
+<p>here documents是一段代码块，可以利用重定向将这个代码块传递到一个交互或者命令中。</p>
+
+<p>标准的结构为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>COMMAND <span class="sh">&lt;&lt;HERESTRING
+...
+HERESTRING
+</span></code></pre>
+</div>
+
+<p>例如:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>tail <span class="sh">&lt;&lt; HERE
+a
+b
+HERE
+</span></code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>a
+b
+</code></pre>
+</div>
+
+<p>也可以用<code class="highlighter-rouge">&lt;&lt;-</code>来排除tab对heredocuments的影响</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cat <span class="sh">&lt;&lt;- HERE
+a
+	b
+HERE
+</span></code></pre>
+</div>
+
+<p>输出会是</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>a
+b
+</code></pre>
+</div>
+
+<p>此外，here document可以使用参数替换</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">name</span><span class="o">=</span><span class="s2">"Smith"</span>
+cat <span class="sh">&lt;&lt; HERE
+a
+$name
+HERE
+</span></code></pre>
+</div>
+
+<p>将会输出</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>a
+Smith
+</code></pre>
+</div>
+
+<p>参数替换可以使用’‘来禁用</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">name</span><span class="o">=</span><span class="s2">"Smith"</span>
+cat <span class="sh">&lt;&lt; 'HERE'
+a
+$Smith
+HERE
+</span></code></pre>
+</div>
+
+<p>将会输出</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>a
+$Smith
+</code></pre>
+</div>
+
+<p>可以利用这种方法来产生代码，不会造成问题。</p>
+
+<p>函数也可以使用here document来提供数据</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">function </span>echoabc<span class="o">(){</span>
+  <span class="nb">read </span>line1
+  <span class="nb">echo </span>line1
+  <span class="nb">read </span>line2
+  <span class="nb">echo </span>line2
+<span class="o">}</span>
+
+echoabc <span class="sh">&lt;&lt; HERE
+a
+b
+HERE
+</span></code></pre>
+</div>
+
+<p>也可以输出</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>a
+b
+</code></pre>
+</div>
+
+<p>还可以使用here document注释代码块</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>: <span class="sh">&lt;&lt; HERE
+echo a
+HERE
+
+</span><span class="nb">echo </span>b
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>b
+</code></pre>
+</div>
+
+<p>相当于将here document传递给了:，不会有任何的影响。</p>
+
+<p><strong>注意here document的结束符前后都不可以有空格，否则会产生识别上的错误</strong></p>
+
+<h2 id="here-string">here string</h2>
+
+<p>here string可以认为是here document的一种形式。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nv">HERE</span><span class="o">=</span><span class="s2">"abcd"</span>
+tail <span class="o">&lt;&lt;&lt;</span> <span class="nv">$HERE</span>
+</code></pre>
+</div>
+
+<p>将会输出：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>abcd
+</code></pre>
+</div>
+
+<p>相当于直接将一个string传递给了命令。</p>
+
+</div>
+
+<div>
+	
+	<div class="eof"></div>
+	
+</div>
+
+<div class="share">
+    <p>Share this post with: </p>
+	<a href="https://twitter.com/intent/tweet?text=I/O重定向@1335133044&amp;url=https://fengyalv.github.io/Blogs/shell/IO%E9%87%8D%E5%AE%9A%E5%90%91.html" class="twitter-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://www.facebook.com/sharer/sharer.php?u=https://fengyalv.github.io/Blogs/shell/IO%E9%87%8D%E5%AE%9A%E5%90%91.html" class="facebook-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://plus.google.com/share?url=https://fengyalv.github.io/Blogs/shell/IO%E9%87%8D%E5%AE%9A%E5%90%91.html" class="googleplus-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+</div>
+
+
+<div id="disqus_thread"></div>
+
+
+<script type="text/javascript">
+	    /* * * CONFIGURATION VARIABLES * * */
+		var disqus_shortname = "Fengya";
+		var disqus_identifier = "/shell/IO重定向";
+		var disqus_url = "https://fengyalv.github.io/shell/IO%E9%87%8D%E5%AE%9A%E5%90%91.html";
+		(function() {
+			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+
+ 
+</div>
+
+
+</article>
+
+  </div>
+
+</body>
+
+<foot>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <center>
+        
+		<p><a class="link" href="/Blogs/archive/">Archive</a> /
+		<a class="link" href="/Blogs/category/">Category</a> / 
+		<a class="link" href="/Blogs/tags/">Tags</a> / 
+		<a class="link" href="/Blogs/about/">About</a> /
+		<a class="link" href="/Blogs/contact/">Contact</a>
+        </p>
+
+        <span><script>document.write(new Date().getFullYear());</script></span>
+        <span>&copy;</span>
+        
+		<a class="link" href="/Blogs">Fengya</a>
+		<br>
+		<span>Theme &copy; <a class="link" href="https://twitter.com/1335133044" target="_blank"> Fengya</a> | </span>
+				<iframe
+			style="margin-left: 2px; margin-bottom:-5px;"
+			frameborder="0" scrolling="0" width="91px" height="20px"
+			src="https://ghbtns.com/github-btn.html?user=Fengyalv&repo=Blogs&type=star&count=true" >
+		</iframe>
+
+    </center>
+    
+  </div>
+
+</footer>
+
+    <foot>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Derictory -->
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://yandex.st/highlightjs/6.2/highlight.min.js"></script>
+
+<!-- Hit analytics -->
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- Directory -->
+
+<script src="/Blogs/js/main.js"></script>
+
+</foot>
+
+
+</foot>
+
+</html>

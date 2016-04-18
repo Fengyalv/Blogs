@@ -1,0 +1,449 @@
+---
+layout: post
+title: "I/O重定向"
+subtitle: ""
+date: 2016-04-18
+author: Fengya
+category: shell
+tags: shell linux mac 重定向
+finished: true
+---
+
+# I/O重定向
+
+默认情况下始终有3个"文件"处于打开状态, stdin (键盘), stdout (屏幕), and stderr (错误消息输出到屏幕上). 这3个文件和其他打开的文件都可以被重定向. 对于重定向简单的解释就是捕捉一个文件, 命令, 程序, 脚本, 或者甚至是脚本中的代码块的输出, 然后将这些输出作为输入发送到另一个文件, 命令, 程序, 或脚本中.
+
+每个打开的文件都会被分配一个文件描述符.stdin, stdout, 和stderr的文件描述符分别是0, 1, 和 2. 对于正在打开的额外文件, 保留了描述符3到9. 在某些时候将这些格外的文件描述符分配给stdin, stdout, 或者是stderr作为临时的副本链接是非常有用的. 在经过复杂的重定向和刷新之后需要把它们恢复成正常的样子.
+
+一些例子：
+
+文件重定向通常的用法：
+
+```shell
+
+   1    COMMAND_OUTPUT >
+   2       # 重定向stdout到一个文件.
+   3       # 如果没有这个文件就创建, 否则就覆盖.
+   4 
+   5       ls -lR > dir-tree.list
+   6       # 创建一个包含目录树列表的文件.
+   7 
+   8    : > filename
+   9       # > 会把文件"filename"截断为0长度.
+  10       # 如果文件不存在, 那么就创建一个0长度的文件(与'touch'的效果相同).
+  11       # : 是一个占位符, 不产生任何输出.
+  12 
+  13    > filename    
+  14       # > 会把文件"filename"截断为0长度.
+  15       # 如果文件不存在, 那么就创建一个0长度的文件(与'touch'的效果相同).
+  16       # (与上边的": >"效果相同, 但是在某些shell下可能不能工作.)
+  17 
+  18    COMMAND_OUTPUT >>
+  19       # 重定向stdout到一个文件.
+  20       # 如果文件不存在, 那么就创建它, 如果存在, 那么就追加到文件后边.
+  21 
+  22 
+  23       # 单行重定向命令(只会影响它们所在的行):
+  24       # --------------------------------------------------------------------
+  25 
+  26    1>filename
+  27       # 重定向stdout到文件"filename".
+  28    1>>filename
+  29       # 重定向并追加stdout到文件"filename".
+  30    2>filename
+  31       # 重定向stderr到文件"filename".
+  32    2>>filename
+  33       # 重定向并追加stderr到文件"filename".
+  34    &>filename
+  35       # 将stdout和stderr都重定向到文件"filename".
+  36 
+  37       #==============================================================================
+  38       # 重定向stdout, 一次一行.
+  39       LOGFILE=script.log
+  40 
+  41       echo "This statement is sent to the log file, \"$LOGFILE\"." 1>$LOGFILE
+  42       echo "This statement is appended to \"$LOGFILE\"." 1>>$LOGFILE
+  43       echo "This statement is also appended to \"$LOGFILE\"." 1>>$LOGFILE
+  44       echo "This statement is echoed to stdout, and will not appear in \"$LOGFILE\"."
+  45       # 每行过后, 这些重定向命令会自动"reset".
+  46 
+  47 
+  48 
+  49       # 重定向stderr, 一次一行.
+  50       ERRORFILE=script.errors
+  51 
+  52       bad_command1 2>$ERRORFILE       #  错误消息发到$ERRORFILE中.
+  53       bad_command2 2>>$ERRORFILE      #  错误消息添加到$ERRORFILE中.
+  54       bad_command3                    #  错误消息echo到stderr,
+  55                                       #+ 并且不出现在$ERRORFILE中.
+  56       # 每行过后, 这些重定向命令也会自动"reset".
+  57       #==============================================================================
+  58 
+  59 
+  60 
+  61    2>&1
+  62       # 重定向stderr到stdout.
+  63       # 得到的错误消息与stdout一样, 发送到一个地方.
+  64 
+  65    i>&j
+  66       # 重定向文件描述符i 到 j.
+  67       # 指向i文件的所有输出都发送到j中去.
+  68 
+  69    >&j
+  70       # 默认的, 重定向文件描述符1(stdout)到 j.
+  71       # 所有传递到stdout的输出都送到j中去.
+  72 
+  73    0< FILENAME
+  74     < FILENAME
+  75       # 从文件中接受输入.
+  76       # 与">"是成对命令, 并且通常都是结合使用.
+  77       #
+  78       # grep search-word <filename
+  79 
+  80 
+  81    [j]<>filename
+  82       # 为了读写"filename", 把文件"filename"打开, 并且分配文件描述符"j"给它.
+  83       # 如果文件"filename"不存在, 那么就创建它.
+  84       # 如果文件描述符"j"没指定, 那默认是fd 0, stdin.
+  85       #
+  86       # 这种应用通常是为了写到一个文件中指定的地方.
+  87       echo 1234567890 > File    # 写字符串到"File".
+  88       exec 3<> File             # 打开"File"并且给它分配fd 3.
+  89       read -n 4 <&3             # 只读4个字符.
+  90       echo -n . >&3             # 写一个小数点.
+  91       exec 3>&-                 # 关闭fd 3.
+  92       cat File                  # ==> 1234.67890
+  93       # 随机存储.
+  94 
+  95 
+  96 
+  97    |
+  98       # 管道.
+  99       # 通用目的的处理和命令链工具.
+ 100       # 与">"很相似, 但是实际上更通用.
+ 101       # 对于想将命令, 脚本, 文件和程序串连起来的时候很有用.
+ 102       cat *.txt | sort | uniq > result-file
+ 103       # 对所有的.txt文件的输出进行排序, 并且删除重复行,
+ 104       # 最后将结果保存到"result-file"中.
+```
+
+将输入输出重定向与管道相结合
+
+```shell
+   1 command < input-file > output-file
+   2 
+   3 command1 | command2 | command3 > output-file
+```
+
+将多个输出流重定向到一个文件上：
+
+```shell
+   1 ls -yz >> command.log 2>&1
+   2 #  将错误选项"yz"的结果放到文件"command.log"中.
+   3 #  因为stderr被重定向到这个文件中,
+   4 #+ 所有的错误消息也就都指向那里了.
+   5 
+   6 #  注意, 下边这个例子就不会给出相同的结果.
+   7 ls -yz 2>&1 >> command.log
+   8 #  输出一个错误消息, 但是并不写到文件中.
+   9 
+  10 #  如果将stdout和stderr都重定向,
+  11 #+ 命令的顺序会有些不同.
+```
+
+关闭文件描述符
+
+```shell
+n<&-
+#关闭输入文件描述符n.
+
+0<&-
+<&-
+#关闭stdin.
+
+n>&-
+#关闭输出文件描述符n.
+
+1>&-
+>&-
+#关闭stdout.
+```
+
+子进程继承了打开的文件描述符. 这就是为什么管道可以工作. 如果想阻止fd被继承, 那么可以关掉它:
+
+```shell
+   1 # 只重定向stderr到一个管道.
+   2 
+   3 exec 3>&1                              # 保存当前stdout的"值".
+   4 ls -l 2>&1 >&3 3>&- | grep bad 3>&-    # 对'grep'关闭fd 3(但不关闭'ls').
+   5 #              ^^^^   ^^^^
+   6 exec 3>&-                              # 现在对于剩余的脚本关闭它.
+```
+
+
+
+## exec
+
+exec  命令会将stdin重定向到文件中. 从这句开始, 后边的输入就都来自于这个文件了, 而不是标准输入了(通常都是键盘输入). 这样就提供了一种按行读取文件的方法, 并且可以使用sed 和/或 awk来对每一行进行分析.
+
+使用exec重定向标准输入：
+
+```shell
+
+   1 #!/bin/bash
+   2 # 使用'exec'重定向标准输入.
+   3 
+   4 
+   5 exec 6<&0          # 将文件描述符#6与stdin链接起来.
+   6                    # 保存了stdin.
+   7 
+   8 exec < data-file   # stdin被文件"data-file"所代替.
+   9 
+  10 read a1            # 读取文件"data-file"的第一行.
+  11 read a2            # 读取文件"data-file"的第二行.
+  12 
+  13 echo
+  14 echo "Following lines read from file."
+  15 echo "-------------------------------"
+  16 echo $a1
+  17 echo $a2
+  18 
+  19 echo; echo; echo
+  20 
+  21 exec 0<&6 6<&-
+  22 #  现在将stdin从fd #6中恢复, 因为刚才我们把stdin重定向到#6了,
+  23 #+ 然后关闭fd #6 ( 6<&- ), 好让这个描述符继续被其他进程所使用.
+  24 #
+  25 # <&6 6<&-    这么做也可以.
+  26 
+  27 echo -n "Enter data  "
+  28 read b1  # 现在"read"已经恢复正常了, 就是从stdin中读取.
+  29 echo "Input read from stdin."
+  30 echo "----------------------"
+  31 echo "b1 = $b1"
+  32 
+  33 echo
+  34 
+  35 exit 0
+```
+
+例如可以这样读文件：
+
+```shell
+exec 3<>test.sh;
+#打开test.sh可读写操作，与文件描述符3绑定
+ 
+while read line<&3
+ do
+    echo $line;
+done
+#循环读取文件描述符3（读取的是test.sh内容）
+exec 3>&-
+exec 3<&-
+#关闭文件的，输入，输出绑定
+```
+
+当然一般我们可以直接重定向文件到一个代码块，相当于重定向到这个代码块的标准输入。
+
+## 重定向到代码块
+
+通常我们可以将利用将代码块的输入输出重定向的方法实现一些对于文件的操作。
+
+例如：
+
+```shell
+# while的重定向
+while [ "$name" != Smith ]
+do
+	read name
+	echo $name
+done <"$Filename"
+
+# 以上结构也可以这样写
+exec 3<&0		# 把标准输入绑定到文件描述符3，以便稍后恢复
+exec 0<"$Filename"	# 重定向标准输入为这个文件
+
+while [ "$name" != Smith ]
+do
+	read name
+	echo $name
+done
+
+exec 0<&3		# 恢复标准输入
+exec 3<&-		# 关闭文件描述符3以供后续使用
+
+# until的重定向
+until [ "$name" = Smith ]
+do
+	read name
+	echo "$name"
+done <"$Filename"
+
+# for循环的重定向
+lineCount=`wc $Filename | awk '{print $1}'`		# 统计文件的行数
+
+for name in `seq $lineCount`
+do
+	read name
+	echo $name
+	if [ "$name" = Smith ]						# 循环到Smith的时候就退出循环
+	then
+		break
+	fi
+done <"$Filename"
+
+# if/then结构的重定向
+if :
+then
+	read name
+	echo "$name"
+fi <"$Filename"			# 这个重定向只读了文件中的一行
+```
+
+## Here Documents
+
+here documents是一段代码块，可以利用重定向将这个代码块传递到一个交互或者命令中。
+
+标准的结构为：
+
+```shell
+COMMAND <<HERESTRING
+...
+HERESTRING
+```
+
+例如:
+
+```shell
+tail << HERE
+a
+b
+HERE
+```
+
+输出为：
+
+```shell
+a
+b
+```
+
+也可以用`<<-`来排除tab对heredocuments的影响
+
+例如：
+
+```shell
+cat <<- HERE
+a
+	b
+HERE
+```
+
+输出会是
+
+```
+a
+b
+```
+
+此外，here document可以使用参数替换
+
+例如：
+
+```shell
+name="Smith"
+cat << HERE
+a
+$name
+HERE
+```
+
+将会输出
+
+```
+a
+Smith
+```
+
+参数替换可以使用''来禁用
+
+```shell
+name="Smith"
+cat << 'HERE'
+a
+$Smith
+HERE
+```
+
+将会输出
+
+```
+a
+$Smith
+```
+
+可以利用这种方法来产生代码，不会造成问题。
+
+函数也可以使用here document来提供数据
+
+```shell
+function echoabc(){
+  read line1
+  echo line1
+  read line2
+  echo line2
+}
+
+echoabc << HERE
+a
+b
+HERE
+```
+
+也可以输出
+
+```
+a
+b
+```
+
+还可以使用here document注释代码块
+
+例如：
+
+```shell
+: << HERE
+echo a
+HERE
+
+echo b
+```
+
+输出为：
+
+```
+b
+```
+
+相当于将here document传递给了:，不会有任何的影响。
+
+**注意here document的结束符前后都不可以有空格，否则会产生识别上的错误**
+
+## here string
+
+here string可以认为是here document的一种形式。
+
+例如：
+
+```shell
+HERE="abcd"
+tail <<< $HERE
+```
+
+将会输出：
+
+```
+abcd
+```
+
+相当于直接将一个string传递给了命令。

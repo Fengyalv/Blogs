@@ -310,6 +310,8 @@ cdef
 
 <p>shell脚本也能启动他自已的子进程. 这些子shell(即子进程)使脚本并行地，有效率地地同时运行多个子任务.</p>
 
+<h3 id="shell-1">圆括号运行子shell</h3>
+
 <p>嵌在圆括号里的一列命令在一个子shell里运行。</p>
 
 <p>例如：</p>
@@ -344,6 +346,17 @@ cdef
 <p>子shell可用于为一组命令设定临时的环境变量</p>
 
 <p>进程在不同的子shell中可以并行地执行.这样就允许把一个复杂的任务分成几个小的子问题来同时地处理。</p>
+
+<h3 id="shell-2">管道产生子shell</h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td>管道（</td>
+      <td>）也会产生子shell。在子shell中可以读取父shell中的变量，但是不能写这些变量。有时我们可以通过重定向输入输出的方式来传递这些变量。详细的可以参考<a href="http://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E4%B8%8E%E5%AD%90shell.html">I/O重定向</a></td>
+    </tr>
+  </tbody>
+</table>
 
 
 </div>

@@ -6,9 +6,465 @@
 </description>
     <link>https://fengyalv.github.io/Blogs/</link>
     <atom:link href="https://fengyalv.github.io/Blogs/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 16 Apr 2016 13:28:07 +0800</pubDate>
-    <lastBuildDate>Sat, 16 Apr 2016 13:28:07 +0800</lastBuildDate>
+    <pubDate>Mon, 18 Apr 2016 15:34:12 +0800</pubDate>
+    <lastBuildDate>Mon, 18 Apr 2016 15:34:12 +0800</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>I/O重定向</title>
+        <description>&lt;h1 id=&quot;io&quot;&gt;I/O重定向&lt;/h1&gt;
+
+&lt;p&gt;默认情况下始终有3个”文件”处于打开状态, stdin (键盘), stdout (屏幕), and stderr (错误消息输出到屏幕上). 这3个文件和其他打开的文件都可以被重定向. 对于重定向简单的解释就是捕捉一个文件, 命令, 程序, 脚本, 或者甚至是脚本中的代码块的输出, 然后将这些输出作为输入发送到另一个文件, 命令, 程序, 或脚本中.&lt;/p&gt;
+
+&lt;p&gt;每个打开的文件都会被分配一个文件描述符.stdin, stdout, 和stderr的文件描述符分别是0, 1, 和 2. 对于正在打开的额外文件, 保留了描述符3到9. 在某些时候将这些格外的文件描述符分配给stdin, stdout, 或者是stderr作为临时的副本链接是非常有用的. 在经过复杂的重定向和刷新之后需要把它们恢复成正常的样子.&lt;/p&gt;
+
+&lt;p&gt;一些例子：&lt;/p&gt;
+
+&lt;p&gt;文件重定向通常的用法：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+   1    COMMAND_OUTPUT &amp;gt;
+   2       &lt;span class=&quot;c&quot;&gt;# 重定向stdout到一个文件.&lt;/span&gt;
+   3       &lt;span class=&quot;c&quot;&gt;# 如果没有这个文件就创建, 否则就覆盖.&lt;/span&gt;
+   4 
+   5       ls -lR &amp;gt; dir-tree.list
+   6       &lt;span class=&quot;c&quot;&gt;# 创建一个包含目录树列表的文件.&lt;/span&gt;
+   7 
+   8    : &amp;gt; filename
+   9       &lt;span class=&quot;c&quot;&gt;# &amp;gt; 会把文件&quot;filename&quot;截断为0长度.&lt;/span&gt;
+  10       &lt;span class=&quot;c&quot;&gt;# 如果文件不存在, 那么就创建一个0长度的文件(与&#39;touch&#39;的效果相同).&lt;/span&gt;
+  11       &lt;span class=&quot;c&quot;&gt;# : 是一个占位符, 不产生任何输出.&lt;/span&gt;
+  12 
+  13    &amp;gt; filename    
+  14       &lt;span class=&quot;c&quot;&gt;# &amp;gt; 会把文件&quot;filename&quot;截断为0长度.&lt;/span&gt;
+  15       &lt;span class=&quot;c&quot;&gt;# 如果文件不存在, 那么就创建一个0长度的文件(与&#39;touch&#39;的效果相同).&lt;/span&gt;
+  16       &lt;span class=&quot;c&quot;&gt;# (与上边的&quot;: &amp;gt;&quot;效果相同, 但是在某些shell下可能不能工作.)&lt;/span&gt;
+  17 
+  18    COMMAND_OUTPUT &amp;gt;&amp;gt;
+  19       &lt;span class=&quot;c&quot;&gt;# 重定向stdout到一个文件.&lt;/span&gt;
+  20       &lt;span class=&quot;c&quot;&gt;# 如果文件不存在, 那么就创建它, 如果存在, 那么就追加到文件后边.&lt;/span&gt;
+  21 
+  22 
+  23       &lt;span class=&quot;c&quot;&gt;# 单行重定向命令(只会影响它们所在的行):&lt;/span&gt;
+  24       &lt;span class=&quot;c&quot;&gt;# --------------------------------------------------------------------&lt;/span&gt;
+  25 
+  26    1&amp;gt;filename
+  27       &lt;span class=&quot;c&quot;&gt;# 重定向stdout到文件&quot;filename&quot;.&lt;/span&gt;
+  28    1&amp;gt;&amp;gt;filename
+  29       &lt;span class=&quot;c&quot;&gt;# 重定向并追加stdout到文件&quot;filename&quot;.&lt;/span&gt;
+  30    2&amp;gt;filename
+  31       &lt;span class=&quot;c&quot;&gt;# 重定向stderr到文件&quot;filename&quot;.&lt;/span&gt;
+  32    2&amp;gt;&amp;gt;filename
+  33       &lt;span class=&quot;c&quot;&gt;# 重定向并追加stderr到文件&quot;filename&quot;.&lt;/span&gt;
+  34    &amp;amp;&amp;gt;filename
+  35       &lt;span class=&quot;c&quot;&gt;# 将stdout和stderr都重定向到文件&quot;filename&quot;.&lt;/span&gt;
+  36 
+  37       &lt;span class=&quot;c&quot;&gt;#==============================================================================&lt;/span&gt;
+  38       &lt;span class=&quot;c&quot;&gt;# 重定向stdout, 一次一行.&lt;/span&gt;
+  39       &lt;span class=&quot;nv&quot;&gt;LOGFILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;script.log
+  40 
+  41       &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;This statement is sent to the log file, &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$LOGFILE&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&quot;&lt;/span&gt; 1&amp;gt;&lt;span class=&quot;nv&quot;&gt;$LOGFILE&lt;/span&gt;
+  42       &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;This statement is appended to &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$LOGFILE&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&quot;&lt;/span&gt; 1&amp;gt;&amp;gt;&lt;span class=&quot;nv&quot;&gt;$LOGFILE&lt;/span&gt;
+  43       &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;This statement is also appended to &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$LOGFILE&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&quot;&lt;/span&gt; 1&amp;gt;&amp;gt;&lt;span class=&quot;nv&quot;&gt;$LOGFILE&lt;/span&gt;
+  44       &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;This statement is echoed to stdout, and will not appear in &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$LOGFILE&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;.&quot;&lt;/span&gt;
+  45       &lt;span class=&quot;c&quot;&gt;# 每行过后, 这些重定向命令会自动&quot;reset&quot;.&lt;/span&gt;
+  46 
+  47 
+  48 
+  49       &lt;span class=&quot;c&quot;&gt;# 重定向stderr, 一次一行.&lt;/span&gt;
+  50       &lt;span class=&quot;nv&quot;&gt;ERRORFILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;script.errors
+  51 
+  52       bad_command1 2&amp;gt;&lt;span class=&quot;nv&quot;&gt;$ERRORFILE&lt;/span&gt;       &lt;span class=&quot;c&quot;&gt;#  错误消息发到$ERRORFILE中.&lt;/span&gt;
+  53       bad_command2 2&amp;gt;&amp;gt;&lt;span class=&quot;nv&quot;&gt;$ERRORFILE&lt;/span&gt;      &lt;span class=&quot;c&quot;&gt;#  错误消息添加到$ERRORFILE中.&lt;/span&gt;
+  54       bad_command3                    &lt;span class=&quot;c&quot;&gt;#  错误消息echo到stderr,&lt;/span&gt;
+  55                                       &lt;span class=&quot;c&quot;&gt;#+ 并且不出现在$ERRORFILE中.&lt;/span&gt;
+  56       &lt;span class=&quot;c&quot;&gt;# 每行过后, 这些重定向命令也会自动&quot;reset&quot;.&lt;/span&gt;
+  57       &lt;span class=&quot;c&quot;&gt;#==============================================================================&lt;/span&gt;
+  58 
+  59 
+  60 
+  61    2&amp;gt;&amp;amp;1
+  62       &lt;span class=&quot;c&quot;&gt;# 重定向stderr到stdout.&lt;/span&gt;
+  63       &lt;span class=&quot;c&quot;&gt;# 得到的错误消息与stdout一样, 发送到一个地方.&lt;/span&gt;
+  64 
+  65    i&amp;gt;&amp;amp;j
+  66       &lt;span class=&quot;c&quot;&gt;# 重定向文件描述符i 到 j.&lt;/span&gt;
+  67       &lt;span class=&quot;c&quot;&gt;# 指向i文件的所有输出都发送到j中去.&lt;/span&gt;
+  68 
+  69    &amp;gt;&amp;amp;j
+  70       &lt;span class=&quot;c&quot;&gt;# 默认的, 重定向文件描述符1(stdout)到 j.&lt;/span&gt;
+  71       &lt;span class=&quot;c&quot;&gt;# 所有传递到stdout的输出都送到j中去.&lt;/span&gt;
+  72 
+  73    0&amp;lt; FILENAME
+  74     &amp;lt; FILENAME
+  75       &lt;span class=&quot;c&quot;&gt;# 从文件中接受输入.&lt;/span&gt;
+  76       &lt;span class=&quot;c&quot;&gt;# 与&quot;&amp;gt;&quot;是成对命令, 并且通常都是结合使用.&lt;/span&gt;
+  77       &lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+  78       &lt;span class=&quot;c&quot;&gt;# grep search-word &amp;lt;filename&lt;/span&gt;
+  79 
+  80 
+  81    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;j]&amp;lt;&amp;gt;filename
+  82       &lt;span class=&quot;c&quot;&gt;# 为了读写&quot;filename&quot;, 把文件&quot;filename&quot;打开, 并且分配文件描述符&quot;j&quot;给它.&lt;/span&gt;
+  83       &lt;span class=&quot;c&quot;&gt;# 如果文件&quot;filename&quot;不存在, 那么就创建它.&lt;/span&gt;
+  84       &lt;span class=&quot;c&quot;&gt;# 如果文件描述符&quot;j&quot;没指定, 那默认是fd 0, stdin.&lt;/span&gt;
+  85       &lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+  86       &lt;span class=&quot;c&quot;&gt;# 这种应用通常是为了写到一个文件中指定的地方.&lt;/span&gt;
+  87       &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;1234567890 &amp;gt; File    &lt;span class=&quot;c&quot;&gt;# 写字符串到&quot;File&quot;.&lt;/span&gt;
+  88       &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;3&amp;lt;&amp;gt; File             &lt;span class=&quot;c&quot;&gt;# 打开&quot;File&quot;并且给它分配fd 3.&lt;/span&gt;
+  89       &lt;span class=&quot;nb&quot;&gt;read&lt;/span&gt; -n 4 &amp;lt;&amp;amp;3             &lt;span class=&quot;c&quot;&gt;# 只读4个字符.&lt;/span&gt;
+  90       &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -n . &amp;gt;&amp;amp;3             &lt;span class=&quot;c&quot;&gt;# 写一个小数点.&lt;/span&gt;
+  91       &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;3&amp;gt;&amp;amp;-                 &lt;span class=&quot;c&quot;&gt;# 关闭fd 3.&lt;/span&gt;
+  92       cat File                  &lt;span class=&quot;c&quot;&gt;# ==&amp;gt; 1234.67890&lt;/span&gt;
+  93       &lt;span class=&quot;c&quot;&gt;# 随机存储.&lt;/span&gt;
+  94 
+  95 
+  96 
+  97    |
+  98       &lt;span class=&quot;c&quot;&gt;# 管道.&lt;/span&gt;
+  99       &lt;span class=&quot;c&quot;&gt;# 通用目的的处理和命令链工具.&lt;/span&gt;
+ 100       &lt;span class=&quot;c&quot;&gt;# 与&quot;&amp;gt;&quot;很相似, 但是实际上更通用.&lt;/span&gt;
+ 101       &lt;span class=&quot;c&quot;&gt;# 对于想将命令, 脚本, 文件和程序串连起来的时候很有用.&lt;/span&gt;
+ 102       cat &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.txt | sort | uniq &amp;gt; result-file
+ 103       &lt;span class=&quot;c&quot;&gt;# 对所有的.txt文件的输出进行排序, 并且删除重复行,&lt;/span&gt;
+ 104       &lt;span class=&quot;c&quot;&gt;# 最后将结果保存到&quot;result-file&quot;中.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;将输入输出重定向与管道相结合&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   1 &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt; &amp;lt; input-file &amp;gt; output-file
+   2 
+   3 command1 | command2 | command3 &amp;gt; output-file
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;将多个输出流重定向到一个文件上：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   1 ls -yz &amp;gt;&amp;gt; command.log 2&amp;gt;&amp;amp;1
+   2 &lt;span class=&quot;c&quot;&gt;#  将错误选项&quot;yz&quot;的结果放到文件&quot;command.log&quot;中.&lt;/span&gt;
+   3 &lt;span class=&quot;c&quot;&gt;#  因为stderr被重定向到这个文件中,&lt;/span&gt;
+   4 &lt;span class=&quot;c&quot;&gt;#+ 所有的错误消息也就都指向那里了.&lt;/span&gt;
+   5 
+   6 &lt;span class=&quot;c&quot;&gt;#  注意, 下边这个例子就不会给出相同的结果.&lt;/span&gt;
+   7 ls -yz 2&amp;gt;&amp;amp;1 &amp;gt;&amp;gt; command.log
+   8 &lt;span class=&quot;c&quot;&gt;#  输出一个错误消息, 但是并不写到文件中.&lt;/span&gt;
+   9 
+  10 &lt;span class=&quot;c&quot;&gt;#  如果将stdout和stderr都重定向,&lt;/span&gt;
+  11 &lt;span class=&quot;c&quot;&gt;#+ 命令的顺序会有些不同.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;关闭文件描述符&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;n&amp;lt;&amp;amp;-
+&lt;span class=&quot;c&quot;&gt;#关闭输入文件描述符n.&lt;/span&gt;
+
+0&amp;lt;&amp;amp;-
+&amp;lt;&amp;amp;-
+&lt;span class=&quot;c&quot;&gt;#关闭stdin.&lt;/span&gt;
+
+n&amp;gt;&amp;amp;-
+&lt;span class=&quot;c&quot;&gt;#关闭输出文件描述符n.&lt;/span&gt;
+
+1&amp;gt;&amp;amp;-
+&amp;gt;&amp;amp;-
+&lt;span class=&quot;c&quot;&gt;#关闭stdout.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;子进程继承了打开的文件描述符. 这就是为什么管道可以工作. 如果想阻止fd被继承, 那么可以关掉它:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   1 &lt;span class=&quot;c&quot;&gt;# 只重定向stderr到一个管道.&lt;/span&gt;
+   2 
+   3 &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;3&amp;gt;&amp;amp;1                              &lt;span class=&quot;c&quot;&gt;# 保存当前stdout的&quot;值&quot;.&lt;/span&gt;
+   4 ls -l 2&amp;gt;&amp;amp;1 &amp;gt;&amp;amp;3 3&amp;gt;&amp;amp;- | grep bad 3&amp;gt;&amp;amp;-    &lt;span class=&quot;c&quot;&gt;# 对&#39;grep&#39;关闭fd 3(但不关闭&#39;ls&#39;).&lt;/span&gt;
+   5 &lt;span class=&quot;c&quot;&gt;#              ^^^^   ^^^^&lt;/span&gt;
+   6 &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;3&amp;gt;&amp;amp;-                              &lt;span class=&quot;c&quot;&gt;# 现在对于剩余的脚本关闭它.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;exec&quot;&gt;exec&lt;/h2&gt;
+
+&lt;p&gt;exec  命令会将stdin重定向到文件中. 从这句开始, 后边的输入就都来自于这个文件了, 而不是标准输入了(通常都是键盘输入). 这样就提供了一种按行读取文件的方法, 并且可以使用sed 和/或 awk来对每一行进行分析.&lt;/p&gt;
+
+&lt;p&gt;使用exec重定向标准输入：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+   1 &lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+   2 &lt;span class=&quot;c&quot;&gt;# 使用&#39;exec&#39;重定向标准输入.&lt;/span&gt;
+   3 
+   4 
+   5 &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;6&amp;lt;&amp;amp;0          &lt;span class=&quot;c&quot;&gt;# 将文件描述符#6与stdin链接起来.&lt;/span&gt;
+   6                    &lt;span class=&quot;c&quot;&gt;# 保存了stdin.&lt;/span&gt;
+   7 
+   8 &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; &amp;lt; data-file   &lt;span class=&quot;c&quot;&gt;# stdin被文件&quot;data-file&quot;所代替.&lt;/span&gt;
+   9 
+  10 &lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;a1            &lt;span class=&quot;c&quot;&gt;# 读取文件&quot;data-file&quot;的第一行.&lt;/span&gt;
+  11 &lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;a2            &lt;span class=&quot;c&quot;&gt;# 读取文件&quot;data-file&quot;的第二行.&lt;/span&gt;
+  12 
+  13 &lt;span class=&quot;nb&quot;&gt;echo
+  &lt;/span&gt;14 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Following lines read from file.&quot;&lt;/span&gt;
+  15 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;-------------------------------&quot;&lt;/span&gt;
+  16 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$a1&lt;/span&gt;
+  17 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$a2&lt;/span&gt;
+  18 
+  19 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt;; &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt;; &lt;span class=&quot;nb&quot;&gt;echo
+  &lt;/span&gt;20 
+  21 &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;0&amp;lt;&amp;amp;6 6&amp;lt;&amp;amp;-
+  22 &lt;span class=&quot;c&quot;&gt;#  现在将stdin从fd #6中恢复, 因为刚才我们把stdin重定向到#6了,&lt;/span&gt;
+  23 &lt;span class=&quot;c&quot;&gt;#+ 然后关闭fd #6 ( 6&amp;lt;&amp;amp;- ), 好让这个描述符继续被其他进程所使用.&lt;/span&gt;
+  24 &lt;span class=&quot;c&quot;&gt;#&lt;/span&gt;
+  25 &lt;span class=&quot;c&quot;&gt;# &amp;lt;&amp;amp;6 6&amp;lt;&amp;amp;-    这么做也可以.&lt;/span&gt;
+  26 
+  27 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -n &lt;span class=&quot;s2&quot;&gt;&quot;Enter data  &quot;&lt;/span&gt;
+  28 &lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;b1  &lt;span class=&quot;c&quot;&gt;# 现在&quot;read&quot;已经恢复正常了, 就是从stdin中读取.&lt;/span&gt;
+  29 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Input read from stdin.&quot;&lt;/span&gt;
+  30 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;----------------------&quot;&lt;/span&gt;
+  31 &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;b1 = &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$b1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+  32 
+  33 &lt;span class=&quot;nb&quot;&gt;echo
+  &lt;/span&gt;34 
+  35 &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;例如可以这样读文件：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;3&amp;lt;&amp;gt;test.sh;
+&lt;span class=&quot;c&quot;&gt;#打开test.sh可读写操作，与文件描述符3绑定&lt;/span&gt;
+ 
+&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;line&amp;lt;&amp;amp;3
+ &lt;span class=&quot;k&quot;&gt;do
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$line&lt;/span&gt;;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#循环读取文件描述符3（读取的是test.sh内容）&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;3&amp;gt;&amp;amp;-
+&lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;3&amp;lt;&amp;amp;-
+&lt;span class=&quot;c&quot;&gt;#关闭文件的，输入，输出绑定&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;当然一般我们可以直接重定向文件到一个代码块，相当于重定向到这个代码块的标准输入。&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;重定向到代码块&lt;/h2&gt;
+
+&lt;p&gt;通常我们可以将利用将代码块的输入输出重定向的方法实现一些对于文件的操作。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# while的重定向&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$name&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; !&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Smith &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do
+	&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;name
+	&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$name&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt; &amp;lt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$Filename&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 以上结构也可以这样写&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;3&amp;lt;&amp;amp;0		&lt;span class=&quot;c&quot;&gt;# 把标准输入绑定到文件描述符3，以便稍后恢复&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;0&amp;lt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$Filename&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;	&lt;span class=&quot;c&quot;&gt;# 重定向标准输入为这个文件&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$name&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; !&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Smith &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do
+	&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;name
+	&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$name&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done
+
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;0&amp;lt;&amp;amp;3		&lt;span class=&quot;c&quot;&gt;# 恢复标准输入&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;3&amp;lt;&amp;amp;-		&lt;span class=&quot;c&quot;&gt;# 关闭文件描述符3以供后续使用&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# until的重定向&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;until&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$name&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Smith &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do
+	&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;name
+	&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$name&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt; &amp;lt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$Filename&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# for循环的重定向&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;lineCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;wc &lt;span class=&quot;nv&quot;&gt;$Filename&lt;/span&gt; | awk &lt;span class=&quot;s1&quot;&gt;&#39;{print $1}&#39;&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;		&lt;span class=&quot;c&quot;&gt;# 统计文件的行数&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;name &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;seq &lt;span class=&quot;nv&quot;&gt;$lineCount&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do
+	&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;name
+	&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$name&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$name&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Smith &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;						&lt;span class=&quot;c&quot;&gt;# 循环到Smith的时候就退出循环&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;then
+		&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;break
+	&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fi
+done&lt;/span&gt; &amp;lt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$Filename&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# if/then结构的重定向&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; :
+&lt;span class=&quot;k&quot;&gt;then
+	&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;name
+	&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$name&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt; &amp;lt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$Filename&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;			&lt;span class=&quot;c&quot;&gt;# 这个重定向只读了文件中的一行&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;here-documents&quot;&gt;Here Documents&lt;/h2&gt;
+
+&lt;p&gt;here documents是一段代码块，可以利用重定向将这个代码块传递到一个交互或者命令中。&lt;/p&gt;
+
+&lt;p&gt;标准的结构为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;COMMAND &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;HERESTRING
+...
+HERESTRING
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;例如:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tail &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt; HERE
+a
+b
+HERE
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;输出为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;a
+b
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;也可以用&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;&amp;lt;-&lt;/code&gt;来排除tab对heredocuments的影响&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;cat &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt;- HERE
+a
+	b
+HERE
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;输出会是&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;a
+b
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;此外，here document可以使用参数替换&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Smith&quot;&lt;/span&gt;
+cat &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt; HERE
+a
+$name
+HERE
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;将会输出&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;a
+Smith
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;参数替换可以使用’‘来禁用&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Smith&quot;&lt;/span&gt;
+cat &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt; &#39;HERE&#39;
+a
+$Smith
+HERE
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;将会输出&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;a
+$Smith
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;可以利用这种方法来产生代码，不会造成问题。&lt;/p&gt;
+
+&lt;p&gt;函数也可以使用here document来提供数据&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;echoabc&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;line1
+  &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;line1
+  &lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;line2
+  &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;line2
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+echoabc &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt; HERE
+a
+b
+HERE
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;也可以输出&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;a
+b
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;还可以使用here document注释代码块&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;: &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt; HERE
+echo a
+HERE
+
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;b
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;输出为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;b
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;相当于将here document传递给了:，不会有任何的影响。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意here document的结束符前后都不可以有空格，否则会产生识别上的错误&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;here-string&quot;&gt;here string&lt;/h2&gt;
+
+&lt;p&gt;here string可以认为是here document的一种形式。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;HERE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;abcd&quot;&lt;/span&gt;
+tail &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$HERE&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;将会输出：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;abcd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;相当于直接将一个string传递给了命令。&lt;/p&gt;
+</description>
+        <pubDate>Mon, 18 Apr 2016 00:00:00 +0800</pubDate>
+        <link>https://fengyalv.github.io/Blogs/shell/IO%E9%87%8D%E5%AE%9A%E5%90%91.html</link>
+        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/shell/IO%E9%87%8D%E5%AE%9A%E5%90%91.html</guid>
+        
+        <category>shell</category>
+        
+        <category>linux</category>
+        
+        <category>mac</category>
+        
+        <category>重定向</category>
+        
+        
+        <category>shell</category>
+        
+      </item>
     
       <item>
         <title>shell脚本中的函数与子shell</title>
@@ -236,6 +692,8 @@ cdef
 
 &lt;p&gt;shell脚本也能启动他自已的子进程. 这些子shell(即子进程)使脚本并行地，有效率地地同时运行多个子任务.&lt;/p&gt;
 
+&lt;h3 id=&quot;shell-1&quot;&gt;圆括号运行子shell&lt;/h3&gt;
+
 &lt;p&gt;嵌在圆括号里的一列命令在一个子shell里运行。&lt;/p&gt;
 
 &lt;p&gt;例如：&lt;/p&gt;
@@ -270,6 +728,17 @@ cdef
 &lt;p&gt;子shell可用于为一组命令设定临时的环境变量&lt;/p&gt;
 
 &lt;p&gt;进程在不同的子shell中可以并行地执行.这样就允许把一个复杂的任务分成几个小的子问题来同时地处理。&lt;/p&gt;
+
+&lt;h3 id=&quot;shell-2&quot;&gt;管道产生子shell&lt;/h3&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;管道（&lt;/td&gt;
+      &lt;td&gt;）也会产生子shell。在子shell中可以读取父shell中的变量，但是不能写这些变量。有时我们可以通过重定向输入输出的方式来传递这些变量。详细的可以参考&lt;a href=&quot;http://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E4%B8%8E%E5%AD%90shell.html&quot;&gt;I/O重定向&lt;/a&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
 </description>
         <pubDate>Sat, 16 Apr 2016 00:00:00 +0800</pubDate>
