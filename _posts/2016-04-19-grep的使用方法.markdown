@@ -1,0 +1,285 @@
+---
+layout: post
+title: "grep的使用方法"
+subtitle: ""
+date: 2016-04-19
+author: Fengya
+category: shell
+tags: shell linux mac grep 
+finished: true
+---
+
+# grep的使用方法
+
+## 基本使用方法
+
+grep是一种使用正则表达式的多用途文本搜索工具。
+
+通常的使用结构如：
+
+```shell
+grep 'test' testfile.txt
+```
+
+假设testfile.txt中的内容为：
+
+```
+te
+test
+testaaa
+aatestbb
+```
+
+输出为：
+
+```
+./testfile.txt:test
+./testfile.txt:testaa
+./testfile.txt:aatestbb
+```
+
+其中`'test'`为要匹配的正则表达式，`testfile.txt`为要搜索的文件。
+
+若没有指定文件，grep也可以在管道中对stdout进行处理
+
+```shell
+ls | grep 'test'
+```
+
+输出是：
+
+```
+testfile.txt
+```
+
+
+
+## grep的常用参数
+
+### -i
+
+在搜索的时候忽略大小写
+
+例如文件夹中有两个文件`testfile.txt`和`TestFile.txt`。
+
+运行如下脚本：
+
+```shell
+echo 'first one'
+ls | grep 'test'
+echo 'second one'
+ls | grep -i 'test'
+```
+
+将输出：
+
+```
+first one
+testfile.txt
+second one
+testfile.txt
+TestFile.txt
+```
+
+### -w
+
+匹配整词
+
+即如果执行
+
+```shell
+grep -w 'test' testfile.txt
+```
+
+将会匹配`test`不会匹配`testaa`
+
+### -l
+
+仅列出符合匹配的文件，而不列出匹配的具体行
+
+例如：
+
+```shell
+grep -l 'test' testfile.txt
+```
+
+输出为：
+
+```shell
+./testfile.txt
+```
+
+### -L
+
+列出不匹配的文件名，与-l正好相反。
+
+### -r
+
+不仅匹配当前目录，还匹配其子目录
+
+-r选项在很多命令中都有涉及，这里就不赘述了。
+
+### -n
+
+列出行并显示行号
+
+即按照上述的文件，执行命令
+
+```shell
+grep -n 'test' testfile.txt
+```
+
+得到的输出会是：
+
+```
+2:test
+3:testaaa
+4:aatestbb
+```
+
+### -v(\-\-invert-match)
+
+显示所有不匹配的行
+
+顾名思义
+
+### -c(\-\-count)
+
+显示匹配到的行数，而不会列出具体的匹配
+
+所以执行：
+
+```shell
+grep -c 'test' testfile.txt
+```
+
+会得到
+
+```
+./testfile.txt:2
+```
+
+### -E或者使用egrep(mac中没有)
+
+使用扩展的正则表达式。
+
+grep只会使用基本的正则表达式。因此我们需要-E选项来对正则表达式进行扩展。
+
+例如上述文件，可以执行：
+
+```shell
+grep -E 'testa|testb' testfile.txt
+```
+
+来匹配：
+
+```
+./testfile.txt:testaaa
+./testfile.txt:aatestbb
+```
+
+其中或(\|)是扩展的正则表达式中的内容。
+
+### -F
+
+快速的grep，只按照字符串字面上的意思进行搜索。不允许使用正则表达式。有时候这会更加方便
+
+### -h
+
+不显示匹配的文件名
+
+### -s
+
+静默执行。只输出错误信息，不输出其他信息。
+
+### -Ax
+
+在匹配行打印完毕后再打印x行
+
+例如执行：
+
+```shell
+grep -A1 'testa' testfile.txt
+```
+
+输出：
+
+```
+./testfile.txt:testaaa
+./testfile.txt:aatestbb
+```
+
+### -By
+
+在匹配行前打印y行
+
+执行：
+
+```shell
+grep -B1 'testa' testfile.txt
+```
+
+输出：
+
+```
+./testfile.txt:test
+./testfile.txt:testaaa
+```
+
+### -Cz
+
+在前后各自打印z行。
+
+例如：
+
+```shell
+grep -C1 'testa' testfile.txt
+```
+
+输出为:
+
+```
+./testfile.txt:test
+./testfile.txt:testaaa
+./testfile.txt:aatestbb
+```
+
+### -b
+
+在每一行前面打印字符的偏移量
+
+### -f
+
+`-f file`从文件file中提取模板。空文件包含0个模板。
+
+例如我们可以新建一个patternfile文件用于储存模板。
+
+内容为：
+
+```
+test
+testa
+```
+
+执行：
+
+```shell
+grep -f patternfile testfile.txt
+```
+
+匹配结果为：
+
+```
+./testfile.txt:test
+./testfile.txt:testaa
+./testfile.txt:aatestbb
+```
+
+### -x
+
+只打印整行匹配的行
+
+## 正则表达式
+
+正则表达式相关内容可以参见[shell中的正则表达式和通配符](http://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html)
+

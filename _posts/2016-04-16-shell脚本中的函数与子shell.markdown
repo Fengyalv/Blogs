@@ -275,5 +275,5 @@ echo a
 
 ### 管道产生子shell
 
-管道（|）也会产生子shell。在子shell中可以读取父shell中的变量，但是不能写这些变量。有时我们可以通过重定向输入输出的方式来传递这些变量。详细的可以参考[I/O重定向](http://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E4%B8%8E%E5%AD%90shell.html)
+管道（\|）也会产生子shell。在子shell中可以读取父shell中的变量，但是不能写这些变量。有时我们可以通过重定向输入输出的方式来传递这些变量。详细的可以参考[I/O重定向](http://fengyalv.github.io/Blogs/shell/IO%E9%87%8D%E5%AE%9A%E5%90%91.html)
 

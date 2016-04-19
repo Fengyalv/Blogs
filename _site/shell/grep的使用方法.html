@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+
+  <link rel="stylesheet" href="/Blogs/css/main.css">
+  <link rel="canonical" href="https://fengyalv.github.io/Blogs/shell/grep%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html">
+  <link rel="alternate" type="application/rss+xml" title="Blog of Fengya" href="https://fengyalv.github.io/Blogs/feed.xml">
+
+<!-- Google font -->
+
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto Sans">
+
+<!-- font awesome -->
+
+<link rel="stylesheet" href="/Blogs/css/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+
+  
+
+  
+
+  </head>
+
+  <body>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>grep的使用方法</title>
+  <meta name="description" content="grep的使用方法">
+</head>
+
+
+  <div class="wrapper">
+          <header class="post-header">
+
+    <center><div class="post-title" itemprop="name headline">grep的使用方法</div>
+
+		<div class="post-meta"><i class="fa fa-calendar-o"></i> <time datetime="19 Apr 2016" itemprop="datePublished">Apr 19 2016</time>
+
+		&nbsp;&nbsp;•&nbsp;&nbsp;<i class="fa fa-user-secret"></i> <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Fengya</span>
+        
+		<br>
+		<i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-pulse"></i></span>˚C</span>
+	</div>
+
+        
+        <div class="post-tags">
+        
+		<a class="post-tags-item" href="/Blogs/tags/">shell</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">linux</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">mac</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">grep</a>
+        
+	</div>
+    </center>
+    
+</header>
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="post-content">
+    <center>
+	
+	<p></p>
+	
+    </center>
+	<h2>Directory</h2>
+</div>
+
+<div id="category"></div>
+
+<div class="post-content" itemprop="articleBody">
+    <h1 id="grep">grep的使用方法</h1>
+
+<h2 id="section">基本使用方法</h2>
+
+<p>grep是一种使用正则表达式的多用途文本搜索工具。</p>
+
+<p>通常的使用结构如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grep <span class="s1">'test'</span> testfile.txt
+</code></pre>
+</div>
+
+<p>假设testfile.txt中的内容为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>te
+test
+testaaa
+aatestbb
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./testfile.txt:test
+./testfile.txt:testaa
+./testfile.txt:aatestbb
+</code></pre>
+</div>
+
+<p>其中<code class="highlighter-rouge">'test'</code>为要匹配的正则表达式，<code class="highlighter-rouge">testfile.txt</code>为要搜索的文件。</p>
+
+<p>若没有指定文件，grep也可以在管道中对stdout进行处理</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ls | grep <span class="s1">'test'</span>
+</code></pre>
+</div>
+
+<p>输出是：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>testfile.txt
+</code></pre>
+</div>
+
+<h2 id="grep-1">grep的常用参数</h2>
+
+<h3 id="i">-i</h3>
+
+<p>在搜索的时候忽略大小写</p>
+
+<p>例如文件夹中有两个文件<code class="highlighter-rouge">testfile.txt</code>和<code class="highlighter-rouge">TestFile.txt</code>。</p>
+
+<p>运行如下脚本：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">echo</span> <span class="s1">'first one'</span>
+ls | grep <span class="s1">'test'</span>
+<span class="nb">echo</span> <span class="s1">'second one'</span>
+ls | grep -i <span class="s1">'test'</span>
+</code></pre>
+</div>
+
+<p>将输出：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>first one
+testfile.txt
+second one
+testfile.txt
+TestFile.txt
+</code></pre>
+</div>
+
+<h3 id="w">-w</h3>
+
+<p>匹配整词</p>
+
+<p>即如果执行</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grep -w <span class="s1">'test'</span> testfile.txt
+</code></pre>
+</div>
+
+<p>将会匹配<code class="highlighter-rouge">test</code>不会匹配<code class="highlighter-rouge">testaa</code></p>
+
+<h3 id="l">-l</h3>
+
+<p>仅列出符合匹配的文件，而不列出匹配的具体行</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grep -l <span class="s1">'test'</span> testfile.txt
+</code></pre>
+</div>
+
+<p>输出为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./testfile.txt
+</code></pre>
+</div>
+
+<h3 id="l-1">-L</h3>
+
+<p>列出不匹配的文件名，与-l正好相反。</p>
+
+<h3 id="r">-r</h3>
+
+<p>不仅匹配当前目录，还匹配其子目录</p>
+
+<p>-r选项在很多命令中都有涉及，这里就不赘述了。</p>
+
+<h3 id="n">-n</h3>
+
+<p>列出行并显示行号</p>
+
+<p>即按照上述的文件，执行命令</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grep -n <span class="s1">'test'</span> testfile.txt
+</code></pre>
+</div>
+
+<p>得到的输出会是：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>2:test
+3:testaaa
+4:aatestbb
+</code></pre>
+</div>
+
+<h3 id="v--invert-match">-v(--invert-match)</h3>
+
+<p>显示所有不匹配的行</p>
+
+<p>顾名思义</p>
+
+<h3 id="c--count">-c(--count)</h3>
+
+<p>显示匹配到的行数，而不会列出具体的匹配</p>
+
+<p>所以执行：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grep -c <span class="s1">'test'</span> testfile.txt
+</code></pre>
+</div>
+
+<p>会得到</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./testfile.txt:2
+</code></pre>
+</div>
+
+<h3 id="eegrepmac">-E或者使用egrep(mac中没有)</h3>
+
+<p>使用扩展的正则表达式。</p>
+
+<p>grep只会使用基本的正则表达式。因此我们需要-E选项来对正则表达式进行扩展。</p>
+
+<p>例如上述文件，可以执行：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grep -E <span class="s1">'testa|testb'</span> testfile.txt
+</code></pre>
+</div>
+
+<p>来匹配：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./testfile.txt:testaaa
+./testfile.txt:aatestbb
+</code></pre>
+</div>
+
+<p>其中或(|)是扩展的正则表达式中的内容。</p>
+
+<h3 id="f">-F</h3>
+
+<p>快速的grep，只按照字符串字面上的意思进行搜索。不允许使用正则表达式。有时候这会更加方便</p>
+
+<h3 id="h">-h</h3>
+
+<p>不显示匹配的文件名</p>
+
+<h3 id="s">-s</h3>
+
+<p>静默执行。只输出错误信息，不输出其他信息。</p>
+
+<h3 id="ax">-Ax</h3>
+
+<p>在匹配行打印完毕后再打印x行</p>
+
+<p>例如执行：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grep -A1 <span class="s1">'testa'</span> testfile.txt
+</code></pre>
+</div>
+
+<p>输出：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./testfile.txt:testaaa
+./testfile.txt:aatestbb
+</code></pre>
+</div>
+
+<h3 id="by">-By</h3>
+
+<p>在匹配行前打印y行</p>
+
+<p>执行：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grep -B1 <span class="s1">'testa'</span> testfile.txt
+</code></pre>
+</div>
+
+<p>输出：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./testfile.txt:test
+./testfile.txt:testaaa
+</code></pre>
+</div>
+
+<h3 id="cz">-Cz</h3>
+
+<p>在前后各自打印z行。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grep -C1 <span class="s1">'testa'</span> testfile.txt
+</code></pre>
+</div>
+
+<p>输出为:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./testfile.txt:test
+./testfile.txt:testaaa
+./testfile.txt:aatestbb
+</code></pre>
+</div>
+
+<h3 id="b">-b</h3>
+
+<p>在每一行前面打印字符的偏移量</p>
+
+<h3 id="f-1">-f</h3>
+
+<p><code class="highlighter-rouge">-f file</code>从文件file中提取模板。空文件包含0个模板。</p>
+
+<p>例如我们可以新建一个patternfile文件用于储存模板。</p>
+
+<p>内容为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>test
+testa
+</code></pre>
+</div>
+
+<p>执行：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>grep -f patternfile testfile.txt
+</code></pre>
+</div>
+
+<p>匹配结果为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>./testfile.txt:test
+./testfile.txt:testaa
+./testfile.txt:aatestbb
+</code></pre>
+</div>
+
+<h3 id="x">-x</h3>
+
+<p>只打印整行匹配的行</p>
+
+<h2 id="section-1">正则表达式</h2>
+
+<p>正则表达式相关内容可以参见<a href="http://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html">shell中的正则表达式和通配符</a></p>
+
+
+</div>
+
+<div>
+	
+	<div class="eof"></div>
+	
+</div>
+
+<div class="share">
+    <p>Share this post with: </p>
+	<a href="https://twitter.com/intent/tweet?text=grep的使用方法@1335133044&amp;url=https://fengyalv.github.io/Blogs/shell/grep%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html" class="twitter-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://www.facebook.com/sharer/sharer.php?u=https://fengyalv.github.io/Blogs/shell/grep%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html" class="facebook-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://plus.google.com/share?url=https://fengyalv.github.io/Blogs/shell/grep%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html" class="googleplus-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+</div>
+
+
+<div id="disqus_thread"></div>
+
+
+<script type="text/javascript">
+	    /* * * CONFIGURATION VARIABLES * * */
+		var disqus_shortname = "Fengya";
+		var disqus_identifier = "/shell/grep的使用方法";
+		var disqus_url = "https://fengyalv.github.io/shell/grep%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html";
+		(function() {
+			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+
+ 
+</div>
+
+
+</article>
+
+  </div>
+
+</body>
+
+<foot>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <center>
+        
+		<p><a class="link" href="/Blogs/archive/">Archive</a> /
+		<a class="link" href="/Blogs/category/">Category</a> / 
+		<a class="link" href="/Blogs/tags/">Tags</a> / 
+		<a class="link" href="/Blogs/about/">About</a> /
+		<a class="link" href="/Blogs/contact/">Contact</a>
+        </p>
+
+        <span><script>document.write(new Date().getFullYear());</script></span>
+        <span>&copy;</span>
+        
+		<a class="link" href="/Blogs">Fengya</a>
+		<br>
+		<span>Theme &copy; <a class="link" href="https://twitter.com/1335133044" target="_blank"> Fengya</a> | </span>
+				<iframe
+			style="margin-left: 2px; margin-bottom:-5px;"
+			frameborder="0" scrolling="0" width="91px" height="20px"
+			src="https://ghbtns.com/github-btn.html?user=Fengyalv&repo=Blogs&type=star&count=true" >
+		</iframe>
+
+    </center>
+    
+  </div>
+
+</footer>
+
+    <foot>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Derictory -->
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://yandex.st/highlightjs/6.2/highlight.min.js"></script>
+
+<!-- Hit analytics -->
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- Directory -->
+
+<script src="/Blogs/js/main.js"></script>
+
+</foot>
+
+
+</foot>
+
+</html>

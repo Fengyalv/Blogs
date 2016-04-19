@@ -6,9 +6,301 @@
 </description>
     <link>https://fengyalv.github.io/Blogs/</link>
     <atom:link href="https://fengyalv.github.io/Blogs/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 18 Apr 2016 15:34:12 +0800</pubDate>
-    <lastBuildDate>Mon, 18 Apr 2016 15:34:12 +0800</lastBuildDate>
+    <pubDate>Tue, 19 Apr 2016 17:14:28 +0800</pubDate>
+    <lastBuildDate>Tue, 19 Apr 2016 17:14:28 +0800</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>grep的使用方法</title>
+        <description>&lt;h1 id=&quot;grep&quot;&gt;grep的使用方法&lt;/h1&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;基本使用方法&lt;/h2&gt;
+
+&lt;p&gt;grep是一种使用正则表达式的多用途文本搜索工具。&lt;/p&gt;
+
+&lt;p&gt;通常的使用结构如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep &lt;span class=&quot;s1&quot;&gt;&#39;test&#39;&lt;/span&gt; testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;假设testfile.txt中的内容为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;te
+test
+testaaa
+aatestbb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;输出为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./testfile.txt:test
+./testfile.txt:testaa
+./testfile.txt:aatestbb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;其中&lt;code class=&quot;highlighter-rouge&quot;&gt;&#39;test&#39;&lt;/code&gt;为要匹配的正则表达式，&lt;code class=&quot;highlighter-rouge&quot;&gt;testfile.txt&lt;/code&gt;为要搜索的文件。&lt;/p&gt;
+
+&lt;p&gt;若没有指定文件，grep也可以在管道中对stdout进行处理&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls | grep &lt;span class=&quot;s1&quot;&gt;&#39;test&#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;输出是：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;grep-1&quot;&gt;grep的常用参数&lt;/h2&gt;
+
+&lt;h3 id=&quot;i&quot;&gt;-i&lt;/h3&gt;
+
+&lt;p&gt;在搜索的时候忽略大小写&lt;/p&gt;
+
+&lt;p&gt;例如文件夹中有两个文件&lt;code class=&quot;highlighter-rouge&quot;&gt;testfile.txt&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;TestFile.txt&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;运行如下脚本：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;first one&#39;&lt;/span&gt;
+ls | grep &lt;span class=&quot;s1&quot;&gt;&#39;test&#39;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;second one&#39;&lt;/span&gt;
+ls | grep -i &lt;span class=&quot;s1&quot;&gt;&#39;test&#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;将输出：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;first one
+testfile.txt
+second one
+testfile.txt
+TestFile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;w&quot;&gt;-w&lt;/h3&gt;
+
+&lt;p&gt;匹配整词&lt;/p&gt;
+
+&lt;p&gt;即如果执行&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -w &lt;span class=&quot;s1&quot;&gt;&#39;test&#39;&lt;/span&gt; testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;将会匹配&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;不会匹配&lt;code class=&quot;highlighter-rouge&quot;&gt;testaa&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;l&quot;&gt;-l&lt;/h3&gt;
+
+&lt;p&gt;仅列出符合匹配的文件，而不列出匹配的具体行&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -l &lt;span class=&quot;s1&quot;&gt;&#39;test&#39;&lt;/span&gt; testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;输出为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;l-1&quot;&gt;-L&lt;/h3&gt;
+
+&lt;p&gt;列出不匹配的文件名，与-l正好相反。&lt;/p&gt;
+
+&lt;h3 id=&quot;r&quot;&gt;-r&lt;/h3&gt;
+
+&lt;p&gt;不仅匹配当前目录，还匹配其子目录&lt;/p&gt;
+
+&lt;p&gt;-r选项在很多命令中都有涉及，这里就不赘述了。&lt;/p&gt;
+
+&lt;h3 id=&quot;n&quot;&gt;-n&lt;/h3&gt;
+
+&lt;p&gt;列出行并显示行号&lt;/p&gt;
+
+&lt;p&gt;即按照上述的文件，执行命令&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -n &lt;span class=&quot;s1&quot;&gt;&#39;test&#39;&lt;/span&gt; testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;得到的输出会是：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2:test
+3:testaaa
+4:aatestbb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;v--invert-match&quot;&gt;-v(--invert-match)&lt;/h3&gt;
+
+&lt;p&gt;显示所有不匹配的行&lt;/p&gt;
+
+&lt;p&gt;顾名思义&lt;/p&gt;
+
+&lt;h3 id=&quot;c--count&quot;&gt;-c(--count)&lt;/h3&gt;
+
+&lt;p&gt;显示匹配到的行数，而不会列出具体的匹配&lt;/p&gt;
+
+&lt;p&gt;所以执行：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -c &lt;span class=&quot;s1&quot;&gt;&#39;test&#39;&lt;/span&gt; testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;会得到&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./testfile.txt:2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;eegrepmac&quot;&gt;-E或者使用egrep(mac中没有)&lt;/h3&gt;
+
+&lt;p&gt;使用扩展的正则表达式。&lt;/p&gt;
+
+&lt;p&gt;grep只会使用基本的正则表达式。因此我们需要-E选项来对正则表达式进行扩展。&lt;/p&gt;
+
+&lt;p&gt;例如上述文件，可以执行：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -E &lt;span class=&quot;s1&quot;&gt;&#39;testa|testb&#39;&lt;/span&gt; testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;来匹配：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./testfile.txt:testaaa
+./testfile.txt:aatestbb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;其中或(|)是扩展的正则表达式中的内容。&lt;/p&gt;
+
+&lt;h3 id=&quot;f&quot;&gt;-F&lt;/h3&gt;
+
+&lt;p&gt;快速的grep，只按照字符串字面上的意思进行搜索。不允许使用正则表达式。有时候这会更加方便&lt;/p&gt;
+
+&lt;h3 id=&quot;h&quot;&gt;-h&lt;/h3&gt;
+
+&lt;p&gt;不显示匹配的文件名&lt;/p&gt;
+
+&lt;h3 id=&quot;s&quot;&gt;-s&lt;/h3&gt;
+
+&lt;p&gt;静默执行。只输出错误信息，不输出其他信息。&lt;/p&gt;
+
+&lt;h3 id=&quot;ax&quot;&gt;-Ax&lt;/h3&gt;
+
+&lt;p&gt;在匹配行打印完毕后再打印x行&lt;/p&gt;
+
+&lt;p&gt;例如执行：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -A1 &lt;span class=&quot;s1&quot;&gt;&#39;testa&#39;&lt;/span&gt; testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;输出：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./testfile.txt:testaaa
+./testfile.txt:aatestbb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;by&quot;&gt;-By&lt;/h3&gt;
+
+&lt;p&gt;在匹配行前打印y行&lt;/p&gt;
+
+&lt;p&gt;执行：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -B1 &lt;span class=&quot;s1&quot;&gt;&#39;testa&#39;&lt;/span&gt; testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;输出：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./testfile.txt:test
+./testfile.txt:testaaa
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;cz&quot;&gt;-Cz&lt;/h3&gt;
+
+&lt;p&gt;在前后各自打印z行。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -C1 &lt;span class=&quot;s1&quot;&gt;&#39;testa&#39;&lt;/span&gt; testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;输出为:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./testfile.txt:test
+./testfile.txt:testaaa
+./testfile.txt:aatestbb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;b&quot;&gt;-b&lt;/h3&gt;
+
+&lt;p&gt;在每一行前面打印字符的偏移量&lt;/p&gt;
+
+&lt;h3 id=&quot;f-1&quot;&gt;-f&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-f file&lt;/code&gt;从文件file中提取模板。空文件包含0个模板。&lt;/p&gt;
+
+&lt;p&gt;例如我们可以新建一个patternfile文件用于储存模板。&lt;/p&gt;
+
+&lt;p&gt;内容为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;test
+testa
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;执行：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;grep -f patternfile testfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;匹配结果为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./testfile.txt:test
+./testfile.txt:testaa
+./testfile.txt:aatestbb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;x&quot;&gt;-x&lt;/h3&gt;
+
+&lt;p&gt;只打印整行匹配的行&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;正则表达式&lt;/h2&gt;
+
+&lt;p&gt;正则表达式相关内容可以参见&lt;a href=&quot;http://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F.html&quot;&gt;shell中的正则表达式和通配符&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 19 Apr 2016 00:00:00 +0800</pubDate>
+        <link>https://fengyalv.github.io/Blogs/shell/grep%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html</link>
+        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/shell/grep%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html</guid>
+        
+        <category>shell</category>
+        
+        <category>linux</category>
+        
+        <category>mac</category>
+        
+        <category>grep</category>
+        
+        
+        <category>shell</category>
+        
+      </item>
     
       <item>
         <title>I/O重定向</title>
@@ -731,14 +1023,7 @@ cdef
 
 &lt;h3 id=&quot;shell-2&quot;&gt;管道产生子shell&lt;/h3&gt;
 
-&lt;table&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;管道（&lt;/td&gt;
-      &lt;td&gt;）也会产生子shell。在子shell中可以读取父shell中的变量，但是不能写这些变量。有时我们可以通过重定向输入输出的方式来传递这些变量。详细的可以参考&lt;a href=&quot;http://fengyalv.github.io/Blogs/shell/shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E4%B8%8E%E5%AD%90shell.html&quot;&gt;I/O重定向&lt;/a&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;p&gt;管道（|）也会产生子shell。在子shell中可以读取父shell中的变量，但是不能写这些变量。有时我们可以通过重定向输入输出的方式来传递这些变量。详细的可以参考&lt;a href=&quot;http://fengyalv.github.io/Blogs/shell/IO%E9%87%8D%E5%AE%9A%E5%90%91.html&quot;&gt;I/O重定向&lt;/a&gt;&lt;/p&gt;
 
 </description>
         <pubDate>Sat, 16 Apr 2016 00:00:00 +0800</pubDate>
