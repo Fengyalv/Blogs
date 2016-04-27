@@ -6,9 +6,106 @@
 </description>
     <link>https://fengyalv.github.io/Blogs/</link>
     <atom:link href="https://fengyalv.github.io/Blogs/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 21 Apr 2016 15:48:09 +0800</pubDate>
-    <lastBuildDate>Thu, 21 Apr 2016 15:48:09 +0800</lastBuildDate>
+    <pubDate>Wed, 27 Apr 2016 21:12:05 +0800</pubDate>
+    <lastBuildDate>Wed, 27 Apr 2016 21:12:05 +0800</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>date命令的使用方法</title>
+        <description>&lt;h1 id=&quot;date&quot;&gt;date命令的使用方法&lt;/h1&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;usage: date [-jnu] [-d dst] [-r seconds] [-t west] [-v[+|-]val[ymwdHMS]] ...
+            [-f fmt date | [[[mm]dd]HH]MM[[cc]yy][.ss]] [+format]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;常用形式：&lt;/p&gt;
+
+&lt;p&gt;-d用于设置时间。需要超级用户权限。&lt;/p&gt;
+
+&lt;p&gt;-r用于输入一个时间戳，以需要的格式输出。&lt;/p&gt;
+
+&lt;p&gt;-v可以计算时间的差值。比如要获取昨天的时间：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;date -v-1d
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;即可获得当前时间减一天的昨天的当前时间。&lt;/p&gt;
+
+&lt;p&gt;+format可以按照格式输出想要的时间形式。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;date +%Y%m%d
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;将会输出一个形如&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;20160427
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;的字符。&lt;/p&gt;
+
+&lt;p&gt;这里面也可以加其他的修饰。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;date +%Y-%m-%d
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;会输出&lt;code class=&quot;highlighter-rouge&quot;&gt;2016-04-27&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;date命令中的时间域表达的含义如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;% H 小时（00..23） 
+% I 小时（01..12） 
+% k 小时（0..23） 
+% l 小时（1..12） 
+% M 分（00..59） 
+% p 显示出AM或PM 
+% r 时间（hh：mm：ss AM或PM），12小时 
+% s 从1970年1月1日00：00：00到目前经历的秒数 
+% S 秒（00..59） 
+% T 时间（24小时制）（hh:mm:ss） 
+% X 显示时间的格式（％H:％M:％S） 
+% Z 时区 日期域 
+% a 星期几的简称（ Sun..Sat） 
+% A 星期几的全称（ Sunday..Saturday） 
+% b 月的简称（Jan..Dec） 
+% B 月的全称（January..December） 
+% c 日期和时间（ Mon Nov 8 14：12：46 CST 1999） 
+% d 一个月的第几天（01..31） 
+% D 日期（mm／dd／yy） 
+% h 和%b选项相同 
+% j 一年的第几天（001..366） 
+% m 月（01..12） 
+% w 一个星期的第几天（0代表星期天） 
+% W 一年的第几个星期（00..53，星期一为第一天） 
+% x 显示日期的格式（mm/dd/yy） 
+% y 年的最后两个数字（ 1999则是99） 
+% Y 年（例如：1970，1996等） 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Wed, 27 Apr 2016 00:00:00 +0800</pubDate>
+        <link>https://fengyalv.github.io/Blogs/shell/date%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html</link>
+        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/shell/date%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html</guid>
+        
+        <category>shell</category>
+        
+        <category>linux</category>
+        
+        <category>mac</category>
+        
+        <category>命令</category>
+        
+        
+        <category>shell</category>
+        
+      </item>
     
       <item>
         <title>diff命令和patch命令的使用</title>

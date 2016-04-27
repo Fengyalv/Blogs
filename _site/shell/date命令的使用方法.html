@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+
+  <link rel="stylesheet" href="/Blogs/css/main.css">
+  <link rel="canonical" href="https://fengyalv.github.io/Blogs/shell/date%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html">
+  <link rel="alternate" type="application/rss+xml" title="Blog of Fengya" href="https://fengyalv.github.io/Blogs/feed.xml">
+
+<!-- Google font -->
+
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto Sans">
+
+<!-- font awesome -->
+
+<link rel="stylesheet" href="/Blogs/css/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+
+  
+
+  
+
+  </head>
+
+  <body>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>date命令的使用方法</title>
+  <meta name="description" content="date命令的使用方法">
+</head>
+
+
+  <div class="wrapper">
+          <header class="post-header">
+
+    <center><div class="post-title" itemprop="name headline">date命令的使用方法</div>
+
+		<div class="post-meta"><i class="fa fa-calendar-o"></i> <time datetime="27 Apr 2016" itemprop="datePublished">Apr 27 2016</time>
+
+		&nbsp;&nbsp;•&nbsp;&nbsp;<i class="fa fa-user-secret"></i> <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Fengya</span>
+        
+		<br>
+		<i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-pulse"></i></span>˚C</span>
+	</div>
+
+        
+        <div class="post-tags">
+        
+		<a class="post-tags-item" href="/Blogs/tags/">shell</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">linux</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">mac</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">命令</a>
+        
+	</div>
+    </center>
+    
+</header>
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="post-content">
+    <center>
+	
+	<p></p>
+	
+    </center>
+	<h2>Directory</h2>
+</div>
+
+<div id="category"></div>
+
+<div class="post-content" itemprop="articleBody">
+    <h1 id="date">date命令的使用方法</h1>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>usage: date [-jnu] [-d dst] [-r seconds] [-t west] [-v[+|-]val[ymwdHMS]] ...
+            [-f fmt date | [[[mm]dd]HH]MM[[cc]yy][.ss]] [+format]
+</code></pre>
+</div>
+
+<p>常用形式：</p>
+
+<p>-d用于设置时间。需要超级用户权限。</p>
+
+<p>-r用于输入一个时间戳，以需要的格式输出。</p>
+
+<p>-v可以计算时间的差值。比如要获取昨天的时间：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>date -v-1d
+</code></pre>
+</div>
+
+<p>即可获得当前时间减一天的昨天的当前时间。</p>
+
+<p>+format可以按照格式输出想要的时间形式。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>date +%Y%m%d
+</code></pre>
+</div>
+
+<p>将会输出一个形如</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>20160427
+</code></pre>
+</div>
+
+<p>的字符。</p>
+
+<p>这里面也可以加其他的修饰。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>date +%Y-%m-%d
+</code></pre>
+</div>
+
+<p>会输出<code class="highlighter-rouge">2016-04-27</code>。</p>
+
+<p>date命令中的时间域表达的含义如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>% H 小时（00..23） 
+% I 小时（01..12） 
+% k 小时（0..23） 
+% l 小时（1..12） 
+% M 分（00..59） 
+% p 显示出AM或PM 
+% r 时间（hh：mm：ss AM或PM），12小时 
+% s 从1970年1月1日00：00：00到目前经历的秒数 
+% S 秒（00..59） 
+% T 时间（24小时制）（hh:mm:ss） 
+% X 显示时间的格式（％H:％M:％S） 
+% Z 时区 日期域 
+% a 星期几的简称（ Sun..Sat） 
+% A 星期几的全称（ Sunday..Saturday） 
+% b 月的简称（Jan..Dec） 
+% B 月的全称（January..December） 
+% c 日期和时间（ Mon Nov 8 14：12：46 CST 1999） 
+% d 一个月的第几天（01..31） 
+% D 日期（mm／dd／yy） 
+% h 和%b选项相同 
+% j 一年的第几天（001..366） 
+% m 月（01..12） 
+% w 一个星期的第几天（0代表星期天） 
+% W 一年的第几个星期（00..53，星期一为第一天） 
+% x 显示日期的格式（mm/dd/yy） 
+% y 年的最后两个数字（ 1999则是99） 
+% Y 年（例如：1970，1996等） 
+</code></pre>
+</div>
+
+
+</div>
+
+<div>
+	
+	<div class="eof"></div>
+	
+</div>
+
+<div class="share">
+    <p>Share this post with: </p>
+	<a href="https://twitter.com/intent/tweet?text=date命令的使用方法@1335133044&amp;url=https://fengyalv.github.io/Blogs/shell/date%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html" class="twitter-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://www.facebook.com/sharer/sharer.php?u=https://fengyalv.github.io/Blogs/shell/date%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html" class="facebook-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://plus.google.com/share?url=https://fengyalv.github.io/Blogs/shell/date%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html" class="googleplus-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+</div>
+
+
+<div id="disqus_thread"></div>
+
+
+<script type="text/javascript">
+	    /* * * CONFIGURATION VARIABLES * * */
+		var disqus_shortname = "Fengya";
+		var disqus_identifier = "/shell/date命令的使用方法";
+		var disqus_url = "https://fengyalv.github.io/shell/date%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html";
+		(function() {
+			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+
+ 
+</div>
+
+
+</article>
+
+  </div>
+
+</body>
+
+<foot>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <center>
+        
+		<p><a class="link" href="/Blogs/archive/">Archive</a> /
+		<a class="link" href="/Blogs/category/">Category</a> / 
+		<a class="link" href="/Blogs/tags/">Tags</a> / 
+		<a class="link" href="/Blogs/about/">About</a> /
+		<a class="link" href="/Blogs/contact/">Contact</a>
+        </p>
+
+        <span><script>document.write(new Date().getFullYear());</script></span>
+        <span>&copy;</span>
+        
+		<a class="link" href="/Blogs">Fengya</a>
+		<br>
+		<span>Theme &copy; <a class="link" href="https://twitter.com/1335133044" target="_blank"> Fengya</a> | </span>
+				<iframe
+			style="margin-left: 2px; margin-bottom:-5px;"
+			frameborder="0" scrolling="0" width="91px" height="20px"
+			src="https://ghbtns.com/github-btn.html?user=Fengyalv&repo=Blogs&type=star&count=true" >
+		</iframe>
+
+    </center>
+    
+  </div>
+
+</footer>
+
+    <foot>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Derictory -->
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://yandex.st/highlightjs/6.2/highlight.min.js"></script>
+
+<!-- Hit analytics -->
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- Directory -->
+
+<script src="/Blogs/js/main.js"></script>
+
+</foot>
+
+
+</foot>
+
+</html>
