@@ -6,9 +6,63 @@
 </description>
     <link>https://fengyalv.github.io/Blogs/</link>
     <atom:link href="https://fengyalv.github.io/Blogs/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 27 Apr 2016 21:12:05 +0800</pubDate>
-    <lastBuildDate>Wed, 27 Apr 2016 21:12:05 +0800</lastBuildDate>
+    <pubDate>Thu, 05 May 2016 15:19:41 +0800</pubDate>
+    <lastBuildDate>Thu, 05 May 2016 15:19:41 +0800</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>使用终端连接smb</title>
+        <description>&lt;h1 id=&quot;smb&quot;&gt;使用终端连接smb&lt;/h1&gt;
+
+&lt;h2 id=&quot;mount&quot;&gt;使用mount命令&lt;/h2&gt;
+
+&lt;p&gt;mount命令用于挂载系统外的文件。常用于挂载cdrom等操作。也可以用于将smb挂载为一个文件夹来访问。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir /Volumes/soft
+mount -t smbfs //name:password@192.168.1.123/soft /Volumes/soft
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;即一个将smb协议的文件系统挂载在系统中的典型操作。&lt;/p&gt;
+
+&lt;p&gt;首先创建一个文件夹用于挂载。通常我们将这些文件夹放在/Volumes文件夹内。然后使用mount命令。-t指示了文件系统的类型，这里表示smb file system，即smbfs。然后我们就可以通过soft文件夹访问使用smb协议的192.168.1.123中的soft文件夹了。&lt;/p&gt;
+
+&lt;h2 id=&quot;mountsmbfs&quot;&gt;使用mount_smbfs命令&lt;/h2&gt;
+
+&lt;p&gt;这个命令跟mount命令用法类似但是不需要使用-t参数。与此类似的还有&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mount_acfs    mount_afp     mount_cd9660  mount_cddafs  mount_devfs   mount_exfat   mount_fdesc   mount_ftp     mount_hfs     mount_msdos   mount_nfs     mount_ntfs    mount_smbfs   mount_udf     mount_webdav
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;open&quot;&gt;使用open命令&lt;/h2&gt;
+
+&lt;p&gt;open命令是mac系统中很有用的一个命令，可以用来打开许多文件。也可以用open命令来使用smb协议，vnc协议之类的。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;open smb://192.1681.1.123
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;即可使用finder打开以192.1681.1.123为host的smb协议的通信。当然其本质还是将这一通信挂载为一个文件夹来访问。&lt;/p&gt;
+</description>
+        <pubDate>Thu, 05 May 2016 00:00:00 +0800</pubDate>
+        <link>https://fengyalv.github.io/Blogs/mac/%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF%E8%BF%9E%E6%8E%A5smb.html</link>
+        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/mac/%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF%E8%BF%9E%E6%8E%A5smb.html</guid>
+        
+        <category>linux</category>
+        
+        <category>mac</category>
+        
+        <category>通信协议</category>
+        
+        
+        <category>mac</category>
+        
+      </item>
     
       <item>
         <title>date命令的使用方法</title>
@@ -2899,353 +2953,6 @@ LC_ALL=
         
         
         <category>shell</category>
-        
-      </item>
-    
-      <item>
-        <title>Markdown Gramma</title>
-        <description>&lt;h2 id=&quot;heading&quot;&gt;Heading&lt;/h2&gt;
-
-&lt;p&gt;Heading is really simple in Markdown, you can use &lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Like this:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;# H1. Heading&lt;/code&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;h1-heading&quot;&gt;H1. Heading&lt;/h1&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;## H2. Heading&lt;/code&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;h2-heading&quot;&gt;H2. Heading&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;### H3. Heading&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;h3-heading&quot;&gt;H3. Heading&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#### H4. Heading&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;h4-heading&quot;&gt;H4. Heading&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;##### H5. Heading&lt;/code&gt;&lt;/p&gt;
-
-&lt;h5 id=&quot;h5-heading&quot;&gt;H5. Heading&lt;/h5&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;###### H6. Heading&lt;/code&gt;&lt;/p&gt;
-
-&lt;h6 id=&quot;h6-heading&quot;&gt;H6. Heading&lt;/h6&gt;
-
-&lt;p&gt;And like this:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-md&quot; data-lang=&quot;md&quot;&gt;Heading
-======&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;heading-1&quot;&gt;Heading&lt;/h1&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-md&quot; data-lang=&quot;md&quot;&gt;Heading
-&lt;span class=&quot;p&quot;&gt;-------&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;See? Really easy.&lt;/p&gt;
-
-&lt;h2 id=&quot;font&quot;&gt;Font&lt;/h2&gt;
-
-&lt;p&gt;There are three kinds of font in Markdown.&lt;/p&gt;
-
-&lt;h3 id=&quot;italic&quot;&gt;Italic：&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*Italic*&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Italic&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_Italic_&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Italic&lt;/em&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;bold&quot;&gt;Bold：&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;**Bold**&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;__Bold__&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Bold&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;italic--bold&quot;&gt;Italic &amp;amp; Bold：&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;***Italic &amp;amp; Bold***&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;em&gt;Italic &amp;amp; Bold&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;___Italic &amp;amp; Bold___&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;&lt;em&gt;Italic &amp;amp; Bold&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;You can also do this:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;**Markdown is _fun_**&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Markdown is &lt;em&gt;fun&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;list&quot;&gt;List&lt;/h2&gt;
-
-&lt;h3 id=&quot;order-list&quot;&gt;Order list:&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;1. 2. 3. &lt;/code&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;First&lt;/li&gt;
-  &lt;li&gt;Second&lt;/li&gt;
-  &lt;li&gt;Third&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;unorder-list&quot;&gt;Unorder list:&lt;/h3&gt;
-
-&lt;p&gt;There are three ways to make a unorder list:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;* AAA&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;AAA&lt;/li&gt;
-  &lt;li&gt;BBB&lt;/li&gt;
-  &lt;li&gt;CCC&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;- AAA&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;AAA&lt;/li&gt;
-  &lt;li&gt;BBB&lt;/li&gt;
-  &lt;li&gt;CCC&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;+ AAA&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;AAA&lt;/li&gt;
-  &lt;li&gt;BBB&lt;/li&gt;
-  &lt;li&gt;CCC&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;block-quote&quot;&gt;Block quote&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; War is Peace&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; Freedom is Slavery&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; Ignorance is Strength&lt;/code&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;War is Peace&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Freedom is Slavery&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Ignorance is Strength&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;引用區也可內嵌Markdown其他語法。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; * War is Peace&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; * Freedom is Slavery&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt; * Ignorance is Stength&lt;/code&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;ul&gt;
-    &lt;li&gt;War is Peace&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;ul&gt;
-    &lt;li&gt;Freedom is Slavery&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;ul&gt;
-    &lt;li&gt;Ignorance is Stength&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;link&quot;&gt;Link&lt;/h2&gt;
-
-&lt;h3 id=&quot;simple-link&quot;&gt;Simple link&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;http://itisbenjamin.github.io&amp;gt;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://itisbenjamin.github.io&quot;&gt;http://itisbenjamin.github.io&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;You can also do this when you insert an email address.&lt;/p&gt;
-
-&lt;h3 id=&quot;link-1&quot;&gt;Link&lt;/h3&gt;
-
-&lt;p&gt;You can add your link just behind your words:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[Ben](www.itisbenjamin.github.io)&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;www.itisbenjamin.github.io&quot;&gt;Ben&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;And you can also do it like this:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[Something Important][1]&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Then put this line at anywhere you want in your post:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[1]: some comments.&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;link-description&quot;&gt;Link description&lt;/h3&gt;
-
-&lt;p&gt;You can add the link description behind the link address:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[Ben](www.itisbenjamin.github.io &quot;Ben&quot;)&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;www.itisbenjamin.github.io&quot; title=&quot;Ben&quot;&gt;Ben&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;image&quot;&gt;Image&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;![Codes](/img/code.png)&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/code.png&quot; alt=&quot;Codes&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Images’ descriptions are the same as how you do it in links:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;![Codes](/img/code.png &quot;Codes&quot;)&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/code.png&quot; alt=&quot;Codes&quot; title=&quot;Codes&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;code&quot;&gt;Code&lt;/h2&gt;
-
-&lt;p&gt;You can use &lt;code&gt;``&lt;/code&gt; to show your codes:&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;`.default`&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.default&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;If you wanna show a piece of codes, use 4 spaces or 1 tab.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;post-header-container&amp;gt;
-  &amp;lt;div class=&quot;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;scrim&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;header&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;post-header&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;title&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Markdown Gramma&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;info&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;by &lt;span class=&quot;nt&quot;&gt;&amp;lt;strong&amp;gt;&lt;/span&gt;Benjamin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/strong&amp;gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/header&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;others&quot;&gt;Others&lt;/h2&gt;
-
-&lt;h3 id=&quot;breaker&quot;&gt;Breaker&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;---&lt;/code&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;***&lt;/code&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;- - - -&lt;/code&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;They all show a breaker.&lt;/p&gt;
-
-&lt;h2 id=&quot;footnote&quot;&gt;Footnote&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Something needs a footnote[^1].&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[^1]: This is a footnote.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Something needs a footnote&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
-
-&lt;p&gt;Then this footnote will show at the end of this post.&lt;/p&gt;
-
-&lt;h2 id=&quot;delete&quot;&gt;Delete&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;~~There is no tree waiting for me.~~&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;del&gt;There is no tree waiting for me.&lt;/del&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;table&quot;&gt;Table&lt;/h2&gt;
-
-&lt;h3 id=&quot;a-simple-way&quot;&gt;A simple way&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;A     | B     | C     | D &lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;----- | ----- | ----- | -----&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;a     | b     | c     | d&lt;/code&gt;&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;A&lt;/th&gt;
-      &lt;th&gt;B&lt;/th&gt;
-      &lt;th&gt;C&lt;/th&gt;
-      &lt;th&gt;D&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;a&lt;/td&gt;
-      &lt;td&gt;b&lt;/td&gt;
-      &lt;td&gt;c&lt;/td&gt;
-      &lt;td&gt;d&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h3 id=&quot;make-words-at-left-center-or-right&quot;&gt;Make words at left, center or right&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;left      | center       | center       | right&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;:-------- | :----------: | :----------: | -----:&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;a         | b            | c            | d&lt;/code&gt;&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;left&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;center&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;center&lt;/th&gt;
-      &lt;th style=&quot;text-align: right&quot;&gt;right&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;a&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;b&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;c&lt;/td&gt;
-      &lt;td style=&quot;text-align: right&quot;&gt;d&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;div class=&quot;footnotes&quot;&gt;
-  &lt;ol&gt;
-    &lt;li id=&quot;fn:1&quot;&gt;
-      &lt;p&gt;This is a footnote. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/div&gt;
-</description>
-        <pubDate>Tue, 29 Mar 2016 00:00:00 +0800</pubDate>
-        <link>https://fengyalv.github.io/Blogs/coding/markdown.html</link>
-        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/coding/markdown.html</guid>
-        
-        <category>code</category>
-        
-        <category>markdown</category>
-        
-        <category>github</category>
-        
-        
-        <category>coding</category>
         
       </item>
     

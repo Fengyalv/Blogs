@@ -1,0 +1,47 @@
+---
+layout: post
+title: "使用终端连接smb"
+subtitle: ""
+date: 2016-05-05
+author: Fengya
+category: mac
+tags: linux mac 通信协议
+finished: true
+---
+
+# 使用终端连接smb
+
+## 使用mount命令
+
+mount命令用于挂载系统外的文件。常用于挂载cdrom等操作。也可以用于将smb挂载为一个文件夹来访问。
+
+例如：
+
+```shell
+mkdir /Volumes/soft
+mount -t smbfs //name:password@192.168.1.123/soft /Volumes/soft
+```
+
+即一个将smb协议的文件系统挂载在系统中的典型操作。
+
+首先创建一个文件夹用于挂载。通常我们将这些文件夹放在/Volumes文件夹内。然后使用mount命令。-t指示了文件系统的类型，这里表示smb file system，即smbfs。然后我们就可以通过soft文件夹访问使用smb协议的192.168.1.123中的soft文件夹了。
+
+## 使用mount_smbfs命令
+
+这个命令跟mount命令用法类似但是不需要使用-t参数。与此类似的还有
+
+```  
+mount_acfs    mount_afp     mount_cd9660  mount_cddafs  mount_devfs   mount_exfat   mount_fdesc   mount_ftp     mount_hfs     mount_msdos   mount_nfs     mount_ntfs    mount_smbfs   mount_udf     mount_webdav
+```
+
+## 使用open命令
+
+open命令是mac系统中很有用的一个命令，可以用来打开许多文件。也可以用open命令来使用smb协议，vnc协议之类的。
+
+例如：
+
+```shell
+open smb://192.1681.1.123
+```
+
+即可使用finder打开以192.1681.1.123为host的smb协议的通信。当然其本质还是将这一通信挂载为一个文件夹来访问。

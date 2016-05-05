@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+
+  <link rel="stylesheet" href="/Blogs/css/main.css">
+  <link rel="canonical" href="https://fengyalv.github.io/Blogs/mac/%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF%E8%BF%9E%E6%8E%A5smb.html">
+  <link rel="alternate" type="application/rss+xml" title="Blog of Fengya" href="https://fengyalv.github.io/Blogs/feed.xml">
+
+<!-- Google font -->
+
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto Sans">
+
+<!-- font awesome -->
+
+<link rel="stylesheet" href="/Blogs/css/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+
+  
+
+  
+
+  </head>
+
+  <body>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>使用终端连接smb</title>
+  <meta name="description" content="使用终端连接smb">
+</head>
+
+
+  <div class="wrapper">
+          <header class="post-header">
+
+    <center><div class="post-title" itemprop="name headline">使用终端连接smb</div>
+
+		<div class="post-meta"><i class="fa fa-calendar-o"></i> <time datetime="05 May 2016" itemprop="datePublished">May 5 2016</time>
+
+		&nbsp;&nbsp;•&nbsp;&nbsp;<i class="fa fa-user-secret"></i> <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Fengya</span>
+        
+		<br>
+		<i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-pulse"></i></span>˚C</span>
+	</div>
+
+        
+        <div class="post-tags">
+        
+		<a class="post-tags-item" href="/Blogs/tags/">linux</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">mac</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">通信协议</a>
+        
+	</div>
+    </center>
+    
+</header>
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="post-content">
+    <center>
+	
+	<p></p>
+	
+    </center>
+	<h2>Directory</h2>
+</div>
+
+<div id="category"></div>
+
+<div class="post-content" itemprop="articleBody">
+    <h1 id="smb">使用终端连接smb</h1>
+
+<h2 id="mount">使用mount命令</h2>
+
+<p>mount命令用于挂载系统外的文件。常用于挂载cdrom等操作。也可以用于将smb挂载为一个文件夹来访问。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mkdir /Volumes/soft
+mount -t smbfs //name:password@192.168.1.123/soft /Volumes/soft
+</code></pre>
+</div>
+
+<p>即一个将smb协议的文件系统挂载在系统中的典型操作。</p>
+
+<p>首先创建一个文件夹用于挂载。通常我们将这些文件夹放在/Volumes文件夹内。然后使用mount命令。-t指示了文件系统的类型，这里表示smb file system，即smbfs。然后我们就可以通过soft文件夹访问使用smb协议的192.168.1.123中的soft文件夹了。</p>
+
+<h2 id="mountsmbfs">使用mount_smbfs命令</h2>
+
+<p>这个命令跟mount命令用法类似但是不需要使用-t参数。与此类似的还有</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mount_acfs    mount_afp     mount_cd9660  mount_cddafs  mount_devfs   mount_exfat   mount_fdesc   mount_ftp     mount_hfs     mount_msdos   mount_nfs     mount_ntfs    mount_smbfs   mount_udf     mount_webdav
+</code></pre>
+</div>
+
+<h2 id="open">使用open命令</h2>
+
+<p>open命令是mac系统中很有用的一个命令，可以用来打开许多文件。也可以用open命令来使用smb协议，vnc协议之类的。</p>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>open smb://192.1681.1.123
+</code></pre>
+</div>
+
+<p>即可使用finder打开以192.1681.1.123为host的smb协议的通信。当然其本质还是将这一通信挂载为一个文件夹来访问。</p>
+
+</div>
+
+<div>
+	
+	<div class="eof"></div>
+	
+</div>
+
+<div class="share">
+    <p>Share this post with: </p>
+	<a href="https://twitter.com/intent/tweet?text=使用终端连接smb@1335133044&amp;url=https://fengyalv.github.io/Blogs/mac/%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF%E8%BF%9E%E6%8E%A5smb.html" class="twitter-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://www.facebook.com/sharer/sharer.php?u=https://fengyalv.github.io/Blogs/mac/%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF%E8%BF%9E%E6%8E%A5smb.html" class="facebook-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://plus.google.com/share?url=https://fengyalv.github.io/Blogs/mac/%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF%E8%BF%9E%E6%8E%A5smb.html" class="googleplus-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+</div>
+
+
+<div id="disqus_thread"></div>
+
+
+<script type="text/javascript">
+	    /* * * CONFIGURATION VARIABLES * * */
+		var disqus_shortname = "Fengya";
+		var disqus_identifier = "/mac/使用终端连接smb";
+		var disqus_url = "https://fengyalv.github.io/mac/%E4%BD%BF%E7%94%A8%E7%BB%88%E7%AB%AF%E8%BF%9E%E6%8E%A5smb.html";
+		(function() {
+			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+
+ 
+</div>
+
+
+</article>
+
+  </div>
+
+</body>
+
+<foot>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <center>
+        
+		<p><a class="link" href="/Blogs/archive/">Archive</a> /
+		<a class="link" href="/Blogs/category/">Category</a> / 
+		<a class="link" href="/Blogs/tags/">Tags</a> / 
+		<a class="link" href="/Blogs/about/">About</a> /
+		<a class="link" href="/Blogs/contact/">Contact</a>
+        </p>
+
+        <span><script>document.write(new Date().getFullYear());</script></span>
+        <span>&copy;</span>
+        
+		<a class="link" href="/Blogs">Fengya</a>
+		<br>
+		<span>Theme &copy; <a class="link" href="https://twitter.com/1335133044" target="_blank"> Fengya</a> | </span>
+				<iframe
+			style="margin-left: 2px; margin-bottom:-5px;"
+			frameborder="0" scrolling="0" width="91px" height="20px"
+			src="https://ghbtns.com/github-btn.html?user=Fengyalv&repo=Blogs&type=star&count=true" >
+		</iframe>
+
+    </center>
+    
+  </div>
+
+</footer>
+
+    <foot>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Derictory -->
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://yandex.st/highlightjs/6.2/highlight.min.js"></script>
+
+<!-- Hit analytics -->
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- Directory -->
+
+<script src="/Blogs/js/main.js"></script>
+
+</foot>
+
+
+</foot>
+
+</html>
