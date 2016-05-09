@@ -6,9 +6,110 @@
 </description>
     <link>https://fengyalv.github.io/Blogs/</link>
     <atom:link href="https://fengyalv.github.io/Blogs/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 05 May 2016 15:19:41 +0800</pubDate>
-    <lastBuildDate>Thu, 05 May 2016 15:19:41 +0800</lastBuildDate>
+    <pubDate>Mon, 09 May 2016 11:42:24 +0800</pubDate>
+    <lastBuildDate>Mon, 09 May 2016 11:42:24 +0800</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>oh my zsh和autojump插件</title>
+        <description>&lt;h1 id=&quot;oh-my-zshautojump&quot;&gt;oh my zsh和autojump插件&lt;/h1&gt;
+
+&lt;h2 id=&quot;oh-my-zsh&quot;&gt;oh my zsh&lt;/h2&gt;
+
+&lt;p&gt;官方github网址：https://github.com/robbyrussell/oh-my-zsh&lt;/p&gt;
+
+&lt;p&gt;可以根据readme来进行安装。&lt;/p&gt;
+
+&lt;p&gt;readme中要求：&lt;/p&gt;
+
+&lt;p&gt;1.Unix-based操作系统。（OS X或者是Linux）&lt;/p&gt;
+
+&lt;p&gt;2.安装了zsh（可以使用homebrew安装）&lt;/p&gt;
+
+&lt;p&gt;3.安装了curl或者是wget&lt;/p&gt;
+
+&lt;p&gt;4.安装了git&lt;/p&gt;
+
+&lt;p&gt;这四点都满足了可以进行下一步。&lt;/p&gt;
+
+&lt;p&gt;如果安装了curl&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sh -c &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果安装了wget&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sh -c &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;即可以完成安装。&lt;/p&gt;
+
+&lt;p&gt;之后可以参阅网上的教程和&lt;code class=&quot;highlighter-rouge&quot;&gt;~/.zshrc&lt;/code&gt;中的说明对风格进行进一步设置。这里我使用了&lt;code class=&quot;highlighter-rouge&quot;&gt;ys&lt;/code&gt;主题。并只安装了autojump插件。&lt;/p&gt;
+
+&lt;h2 id=&quot;autojump&quot;&gt;安装autojump插件&lt;/h2&gt;
+
+&lt;p&gt;autojump插件可以用于直达常用目录。也可以手动设置权重数据库，很方便。&lt;/p&gt;
+
+&lt;p&gt;安装autojump可以使用homebrew，就不赘述了。&lt;/p&gt;
+
+&lt;p&gt;安装之后，根据安装时的提示，按照不同的系统将autojump的命令加入&lt;code class=&quot;highlighter-rouge&quot;&gt;~/.zshrc&lt;/code&gt;中即可。&lt;/p&gt;
+
+&lt;p&gt;使用方法：&lt;/p&gt;
+
+&lt;p&gt;1.autojump [目录名字的一部分]&lt;/p&gt;
+
+&lt;p&gt;autojump加一部分名字即可自动跳转到数据库中对应目录去。使用了oh my zsh还可以敲tab自动补全用于直观的选择，很方便。&lt;/p&gt;
+
+&lt;p&gt;2.autojump有一个自带的alias：j。&lt;/p&gt;
+
+&lt;p&gt;因此简单的输入&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;j dir
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;就可以转到对应的目录去。&lt;/p&gt;
+
+&lt;p&gt;3.对于权重数据库的访问。&lt;/p&gt;
+
+&lt;p&gt;autojump可以修改目录数据库来达到自定义想要的目录的效果。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;autojump -a &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;dir]
+&lt;span class=&quot;c&quot;&gt;# 在数据库中添加一个目录&lt;/span&gt;
+
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;autojump -i &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;value]
+&lt;span class=&quot;c&quot;&gt;# 提升当前目录value数目的权重&lt;/span&gt;
+
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;autojump -d &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;value]
+&lt;span class=&quot;c&quot;&gt;# 降低当前目录的权重&lt;/span&gt;
+
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;autojump -s
+&lt;span class=&quot;c&quot;&gt;# 显示数据库中的统计数据&lt;/span&gt;
+
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;autojump --purge
+&lt;span class=&quot;c&quot;&gt;# 清除不再需要的目录&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Mon, 09 May 2016 00:00:00 +0800</pubDate>
+        <link>https://fengyalv.github.io/Blogs/mac/oh-my-zsh%E5%92%8Cautojump%E6%8F%92%E4%BB%B6.html</link>
+        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/mac/oh-my-zsh%E5%92%8Cautojump%E6%8F%92%E4%BB%B6.html</guid>
+        
+        <category>zsh</category>
+        
+        <category>linux</category>
+        
+        <category>mac</category>
+        
+        <category>autojump</category>
+        
+        
+        <category>mac</category>
+        
+      </item>
     
       <item>
         <title>使用终端连接smb</title>
@@ -2877,73 +2978,6 @@ LC_ALL=
         <pubDate>Thu, 14 Apr 2016 00:00:00 +0800</pubDate>
         <link>https://fengyalv.github.io/Blogs/shell/bash%E8%84%9A%E6%9C%AC%E5%86%85%E9%83%A8%E5%8F%98%E9%87%8F.html</link>
         <guid isPermaLink="true">https://fengyalv.github.io/Blogs/shell/bash%E8%84%9A%E6%9C%AC%E5%86%85%E9%83%A8%E5%8F%98%E9%87%8F.html</guid>
-        
-        <category>shell</category>
-        
-        <category>linux</category>
-        
-        <category>mac</category>
-        
-        
-        <category>shell</category>
-        
-      </item>
-    
-      <item>
-        <title>第一个shell脚本</title>
-        <description>&lt;h1 id=&quot;shell&quot;&gt;第一个shell脚本&lt;/h1&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hello world!&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;1、关于#！&lt;/h2&gt;
-
-&lt;p&gt;在脚本开头的 sha-bang (#!) 是告诉系统这个文件是由特定命令解释器解释的一组命令。 那个 #! 实际上是两个字节的 魔数, 魔数是指定文件类型的特殊记号，在此是表示这是一个可执行的shell脚本（键入 man magic可了解更多的信息）。紧跟着#!的是一个路径名.这个路径名是解释这个脚本内命令的命令解释器程序的路径：可能是一个shell，也可能是一个编程语言或者是一个软件包程序。这个命令解释器能执行脚本内的命令语句。它从脚本开头（即从#!所在行的下一行）起执行，但是忽略注释行。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#!/usr/bin/perl&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#!/usr/bin/tcl&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#!/bin/sed -f&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#!/usr/awk -f&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;上面每一个脚本头行都是不同的命令解释器，如果第一行是/bin/sh, 那就是默认的Shell(Linux系统中bash是默认的shell)，否则的话就是其他的解释器.如果使用#!/bin/sh（因为大多不同的商业UNIX都使用Bourne shell为默认shell）可以使脚本能够移植到非Linux的机器上，虽然这样做你将不能使用Bash许多特有的属性。但这样做的脚本遵循 POSIX sh标准.&lt;/p&gt;
-
-&lt;p&gt;值得注意的是，在”#!”后面提供的路径必须是正确的，否则你运行脚本只会收到通常像”Command not found”那样的错误信息。&lt;/p&gt;
-
-&lt;p&gt;如果脚本程序只是由一组普通的系统命令而没有使用Shell内置命令的话#!将被忽略。再次提醒使用#!/bin/sh将调用默认的命令解释器，这在Linux系统上是/bin/bash.&lt;/p&gt;
-
-&lt;h2 id=&quot;echo&quot;&gt;2、关于echo&lt;/h2&gt;
-
-&lt;p&gt;echo命令是一个系统的内建命令（builtin）。用于I/O操作。在这里我们利用echo命令来输出一行字符串。&lt;/p&gt;
-
-&lt;h2 id=&quot;section-1&quot;&gt;3、关于运行方式&lt;/h2&gt;
-
-&lt;p&gt;接着尝试运行这个脚本：&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Hello world!&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;可以使用的方法有(假设文件的名字为hello.sh)：&lt;/p&gt;
-
-&lt;p&gt;1.&lt;code class=&quot;highlighter-rouge&quot;&gt;bash hello.sh&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;直接使用bash脚本运行hello.sh 这个脚本&lt;/p&gt;
-
-&lt;p&gt;2.&lt;code class=&quot;highlighter-rouge&quot;&gt;chmod +x hello.sh&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;./hello.sh&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;给这个脚本添加运行权限之后直接调用。运行时脚本会根据#！后面的内容确定运行脚本的程序。即使用/bin/bash 。&lt;/p&gt;
-
-&lt;p&gt;与此类似的，我们还可以将脚本放入系统环境变量的search path里面。比如在mac下的/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin之类的目录下。这样就能够直接用&lt;code class=&quot;highlighter-rouge&quot;&gt;hello.sh&lt;/code&gt;这种方式来运行这个脚本了。&lt;/p&gt;
-</description>
-        <pubDate>Wed, 13 Apr 2016 00:00:00 +0800</pubDate>
-        <link>https://fengyalv.github.io/Blogs/shell/%E7%AC%AC%E4%B8%80%E4%B8%AAshell%E8%84%9A%E6%9C%AC.html</link>
-        <guid isPermaLink="true">https://fengyalv.github.io/Blogs/shell/%E7%AC%AC%E4%B8%80%E4%B8%AAshell%E8%84%9A%E6%9C%AC.html</guid>
         
         <category>shell</category>
         

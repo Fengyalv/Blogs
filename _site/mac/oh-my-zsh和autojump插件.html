@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CSS -->
+
+  <link rel="stylesheet" href="/Blogs/css/main.css">
+  <link rel="canonical" href="https://fengyalv.github.io/Blogs/mac/oh-my-zsh%E5%92%8Cautojump%E6%8F%92%E4%BB%B6.html">
+  <link rel="alternate" type="application/rss+xml" title="Blog of Fengya" href="https://fengyalv.github.io/Blogs/feed.xml">
+
+<!-- Google font -->
+
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto Sans">
+
+<!-- font awesome -->
+
+<link rel="stylesheet" href="/Blogs/css/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+
+  
+
+  
+
+  </head>
+
+  <body>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>oh my zsh和autojump插件</title>
+  <meta name="description" content="oh my zsh和autojump插件">
+</head>
+
+
+  <div class="wrapper">
+          <header class="post-header">
+
+    <center><div class="post-title" itemprop="name headline">oh my zsh和autojump插件</div>
+
+		<div class="post-meta"><i class="fa fa-calendar-o"></i> <time datetime="09 May 2016" itemprop="datePublished">May 9 2016</time>
+
+		&nbsp;&nbsp;•&nbsp;&nbsp;<i class="fa fa-user-secret"></i> <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Fengya</span>
+        
+		<br>
+		<i class="fa fa-eye"></i> <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-pulse"></i></span>˚C</span>
+	</div>
+
+        
+        <div class="post-tags">
+        
+		<a class="post-tags-item" href="/Blogs/tags/">zsh</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">linux</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">mac</a>
+        
+		<a class="post-tags-item" href="/Blogs/tags/">autojump</a>
+        
+	</div>
+    </center>
+    
+</header>
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+<div class="post-content">
+    <center>
+	
+	<p></p>
+	
+    </center>
+	<h2>Directory</h2>
+</div>
+
+<div id="category"></div>
+
+<div class="post-content" itemprop="articleBody">
+    <h1 id="oh-my-zshautojump">oh my zsh和autojump插件</h1>
+
+<h2 id="oh-my-zsh">oh my zsh</h2>
+
+<p>官方github网址：https://github.com/robbyrussell/oh-my-zsh</p>
+
+<p>可以根据readme来进行安装。</p>
+
+<p>readme中要求：</p>
+
+<p>1.Unix-based操作系统。（OS X或者是Linux）</p>
+
+<p>2.安装了zsh（可以使用homebrew安装）</p>
+
+<p>3.安装了curl或者是wget</p>
+
+<p>4.安装了git</p>
+
+<p>这四点都满足了可以进行下一步。</p>
+
+<p>如果安装了curl</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sh -c <span class="s2">"</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh<span class="k">)</span><span class="s2">"</span>
+</code></pre>
+</div>
+
+<p>如果安装了wget</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sh -c <span class="s2">"</span><span class="k">$(</span>wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -<span class="k">)</span><span class="s2">"</span>
+</code></pre>
+</div>
+
+<p>即可以完成安装。</p>
+
+<p>之后可以参阅网上的教程和<code class="highlighter-rouge">~/.zshrc</code>中的说明对风格进行进一步设置。这里我使用了<code class="highlighter-rouge">ys</code>主题。并只安装了autojump插件。</p>
+
+<h2 id="autojump">安装autojump插件</h2>
+
+<p>autojump插件可以用于直达常用目录。也可以手动设置权重数据库，很方便。</p>
+
+<p>安装autojump可以使用homebrew，就不赘述了。</p>
+
+<p>安装之后，根据安装时的提示，按照不同的系统将autojump的命令加入<code class="highlighter-rouge">~/.zshrc</code>中即可。</p>
+
+<p>使用方法：</p>
+
+<p>1.autojump [目录名字的一部分]</p>
+
+<p>autojump加一部分名字即可自动跳转到数据库中对应目录去。使用了oh my zsh还可以敲tab自动补全用于直观的选择，很方便。</p>
+
+<p>2.autojump有一个自带的alias：j。</p>
+
+<p>因此简单的输入</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>j dir
+</code></pre>
+</div>
+
+<p>就可以转到对应的目录去。</p>
+
+<p>3.对于权重数据库的访问。</p>
+
+<p>autojump可以修改目录数据库来达到自定义想要的目录的效果。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>autojump -a <span class="o">[</span>dir]
+<span class="c"># 在数据库中添加一个目录</span>
+
+<span class="gp">$ </span>autojump -i <span class="o">[</span>value]
+<span class="c"># 提升当前目录value数目的权重</span>
+
+<span class="gp">$ </span>autojump -d <span class="o">[</span>value]
+<span class="c"># 降低当前目录的权重</span>
+
+<span class="gp">$ </span>autojump -s
+<span class="c"># 显示数据库中的统计数据</span>
+
+<span class="gp">$ </span>autojump --purge
+<span class="c"># 清除不再需要的目录</span>
+</code></pre>
+</div>
+
+
+</div>
+
+<div>
+	
+	<div class="eof"></div>
+	
+</div>
+
+<div class="share">
+    <p>Share this post with: </p>
+	<a href="https://twitter.com/intent/tweet?text=oh my zsh和autojump插件@1335133044&amp;url=https://fengyalv.github.io/Blogs/mac/oh-my-zsh%E5%92%8Cautojump%E6%8F%92%E4%BB%B6.html" class="twitter-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://www.facebook.com/sharer/sharer.php?u=https://fengyalv.github.io/Blogs/mac/oh-my-zsh%E5%92%8Cautojump%E6%8F%92%E4%BB%B6.html" class="facebook-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+    
+	<a href="https://plus.google.com/share?url=https://fengyalv.github.io/Blogs/mac/oh-my-zsh%E5%92%8Cautojump%E6%8F%92%E4%BB%B6.html" class="googleplus-share">
+		<span class="fa-stack fa-lg">
+			<i class="fa fa-circle fa-stack-2x"></i>
+			<i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+		</span>
+	</a>
+</div>
+
+
+<div id="disqus_thread"></div>
+
+
+<script type="text/javascript">
+	    /* * * CONFIGURATION VARIABLES * * */
+		var disqus_shortname = "Fengya";
+		var disqus_identifier = "/mac/oh-my-zsh和autojump插件";
+		var disqus_url = "https://fengyalv.github.io/mac/oh-my-zsh%E5%92%8Cautojump%E6%8F%92%E4%BB%B6.html";
+		(function() {
+			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+
+ 
+</div>
+
+
+</article>
+
+  </div>
+
+</body>
+
+<foot>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <center>
+        
+		<p><a class="link" href="/Blogs/archive/">Archive</a> /
+		<a class="link" href="/Blogs/category/">Category</a> / 
+		<a class="link" href="/Blogs/tags/">Tags</a> / 
+		<a class="link" href="/Blogs/about/">About</a> /
+		<a class="link" href="/Blogs/contact/">Contact</a>
+        </p>
+
+        <span><script>document.write(new Date().getFullYear());</script></span>
+        <span>&copy;</span>
+        
+		<a class="link" href="/Blogs">Fengya</a>
+		<br>
+		<span>Theme &copy; <a class="link" href="https://twitter.com/1335133044" target="_blank"> Fengya</a> | </span>
+				<iframe
+			style="margin-left: 2px; margin-bottom:-5px;"
+			frameborder="0" scrolling="0" width="91px" height="20px"
+			src="https://ghbtns.com/github-btn.html?user=Fengyalv&repo=Blogs&type=star&count=true" >
+		</iframe>
+
+    </center>
+    
+  </div>
+
+</footer>
+
+    <foot>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Derictory -->
+
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://yandex.st/highlightjs/6.2/highlight.min.js"></script>
+
+<!-- Hit analytics -->
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- Directory -->
+
+<script src="/Blogs/js/main.js"></script>
+
+</foot>
+
+
+</foot>
+
+</html>
